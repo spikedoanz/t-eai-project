@@ -1,0 +1,32 @@
+> see : https://docs.google.com/presentation/d/1GesewtkZ89Qi2b6fiMyCgUj8Sz8UEUvy2v5vp8z6Gjc/edit?usp=sharing
+> for original slides
+
+# 1. setup
+- ssh instructions into a pixel
+- llama.cpp setup
+- mlc-llm setup
+- tinygrad setup
+- (can wait until later) automatic setup script from a curl | sh
+
+# 2. sampling pipeline
+? what is the information to gather?
+  > get this from slides
+  - define the schema
+- modify above pipelines to gather said information
+
+# 3. actually sampling
+
+- repeat setup steps for A100 and H100 gpu
+- collate data into multiple csvs
+
+# 4. llm benchmarking
+
+- expose an openai v1 compatible endpoint for each backend
+? what are good benchmarks to use from verifiers?
+- gather benchmarking info for those
+
+# 5. analysis of data
+
+# 6. slides
+
+# 7. writeup
