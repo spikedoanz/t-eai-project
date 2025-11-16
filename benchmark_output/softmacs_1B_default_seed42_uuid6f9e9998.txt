@@ -1,0 +1,76 @@
+seed = 42
+loaded weights in 4639.73 ms, 4.94 GB loaded at 1.07 GB/s
+enqueue in  34.18 ms
+total  70.21 ms, 14.24 tok/s, 126.37 GB/s, param 85.43 GB/s
+Hello
+enqueue in   1.16 ms
+total  37.88 ms, 26.40 tok/s, 234.22 GB/s, param 158.34 GB/s
+Hello!
+enqueue in   1.10 ms
+total  36.24 ms, 27.59 tok/s, 244.81 GB/s, param 165.49 GB/s
+Hello! How
+enqueue in   1.08 ms
+total  37.24 ms, 26.85 tok/s, 238.23 GB/s, param 161.05 GB/s
+Hello! How can
+enqueue in   1.14 ms
+total  37.54 ms, 26.64 tok/s, 236.38 GB/s, param 159.80 GB/s
+Hello! How can I
+enqueue in   1.08 ms
+total  37.33 ms, 26.78 tok/s, 237.65 GB/s, param 160.66 GB/s
+Hello! How can I assist
+enqueue in   1.08 ms
+total  37.76 ms, 26.48 tok/s, 234.98 GB/s, param 158.85 GB/s
+Hello! How can I assist you
+enqueue in   1.07 ms
+total  37.45 ms, 26.70 tok/s, 236.91 GB/s, param 160.16 GB/s
+Hello! How can I assist you today
+enqueue in   1.08 ms
+total  36.92 ms, 27.08 tok/s, 240.30 GB/s, param 162.45 GB/s
+Hello! How can I assist you today?
+enqueue in   1.07 ms
+total  38.03 ms, 26.30 tok/s, 233.31 GB/s, param 157.72 GB/s
+Hello! How can I assist you today?
+enqueue in   1.55 ms
+total  37.95 ms, 26.35 tok/s, 233.80 GB/s, param 158.06 GB/s
+Hello! How can I assist you today?
+enqueue in   1.23 ms
+total  37.21 ms, 26.87 tok/s, 238.45 GB/s, param 161.20 GB/s
+Hello! How can I assist you today?assistant
+enqueue in   1.12 ms
+total  39.32 ms, 25.43 tok/s, 225.63 GB/s, param 152.53 GB/s
+Hello! How can I assist you today?assistant
+enqueue in   1.76 ms
+total  49.43 ms, 20.23 tok/s, 179.50 GB/s, param 121.34 GB/s
+Hello! How can I assist you today?assistant
+
+
+enqueue in   1.62 ms
+total  43.92 ms, 22.77 tok/s, 202.00 GB/s, param 136.56 GB/s
+Hello! How can I assist you today?assistant
+
+I
+enqueue in   1.61 ms
+total  37.57 ms, 26.62 tok/s, 236.18 GB/s, param 159.66 GB/s
+Hello! How can I assist you today?assistant
+
+I can
+enqueue in   1.35 ms
+total  38.31 ms, 26.10 tok/s, 231.62 GB/s, param 156.58 GB/s
+Hello! How can I assist you today?assistant
+
+I can provide
+enqueue in   1.43 ms
+total  38.86 ms, 25.74 tok/s, 228.34 GB/s, param 154.36 GB/s
+Hello! How can I assist you today?assistant
+
+I can provide information
+enqueue in   1.16 ms
+total  38.23 ms, 26.16 tok/s, 232.09 GB/s, param 156.90 GB/s
+Hello! How can I assist you today?assistant
+
+I can provide information and
+enqueue in   1.16 ms
+total  36.67 ms, 27.27 tok/s, 241.99 GB/s, param 163.59 GB/s
+Hello! How can I assist you today?assistant
+
+I can provide information and entertainment
