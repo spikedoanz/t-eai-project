@@ -1,4 +1,6 @@
-# PYTHONPATH=./tinygrad/ python tinygrad_benchmark.py
+"""
+PYTHONPATH=./tinygrad/ python tinygrad_benchmark.py
+"""
 import os
 import uuid
 import subprocess
@@ -17,21 +19,25 @@ SSEEDS  = [("--seed", str(_)) for _ in [42]]
 SSIZES  = [("--size", _) for _ in ["1B"]]
 SQUANTS = [()] + [("--quantize", _) for _ in ["int8", "nf4", "float16", "fp8"]]
 
+# SLEN    = [20] -- number of output tokens
+# SINPUT  = ["some string to pass in, or file to pass in, to test prefill"]
+
 SVARS   = [SSEEDS, SSIZES, SQUANTS]
 
 def whoami():
   import platform
   import getpass
   import socket
-  from tinygrad import Device
+  from tinygrad.device import Device
   return {
-    "platform": platform.system(), "release": platform.release(), "device": Device.default,
+    "platform": platform.system(), "release": platform.release(), "device": str(Device.default),
     "username": getpass.getuser(), "hostname": socket.gethostname()
   }
 
 # 1. precheck that variables are valid
-def is_subset(a: List, b: List) -> bool: 
-  _a = [_[1] if _ else None for _ in a]; _b = [_[1] if _ else None for _ in b]
+def is_subset(a: List, b: List) -> bool:
+  _a = [_[1] if _ else None for _ in a]
+  _b = [_[1] if _ else None for _ in b]
   return set(_a) <= set(_b)
 
 assert is_subset(SSIZES,    AVAILABLE_SIZES)
@@ -49,16 +55,22 @@ def config_to_filename_and_metadata(config) -> tuple[str, dict[str, Any]]:
       k, v = tup
       config_dict[k] = v
   
+  normalized_config = {
+    'size': config_dict['--size'],
+    'quantize': config_dict.get('--quantize', 'default'),
+    'seed': config_dict['--seed']
+  }
+  
   parts = [
     whoiam['hostname'],
-    config_dict['--size'],
-    config_dict.get('--quantize', 'default'),  # Use 'default' when no quantize arg
-    f"seed{config_dict['--seed']}",
+    normalized_config['size'],
+    normalized_config['quantize'],
+    f"seed{normalized_config['seed']}",
     f"uuid{str(uuid.uuid4())[:8]}"
   ]
   filename = '_'.join(parts) + '.txt'
   metadata = {
-    'config': config_dict,
+    'config': normalized_config,
     'whoami': whoiam,
     'uuid': parts[-1]
   }
@@ -81,6 +93,13 @@ for config in configs[:num_runs]:
   
   try:
     with open(f"benchmark_output/{filename}", "w") as f:
+      # write metadata
+      for key, value in metadata['whoami'].items():
+        f.write(f"{key}: {value}\n")
+      for key, value in metadata['config'].items():
+        f.write(f"{key}: {value}\n")
+      f.write(f"uuid: {metadata['uuid']}\n")
+      # then run subprocess
       subprocess.run(args=command, env=env, stdout=f)
   except Exception as e:
     print(f"{command} failed with {e}")

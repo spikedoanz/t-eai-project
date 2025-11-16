@@ -17,6 +17,20 @@ def parse_metrics(line: str) -> Dict[str, Optional[float]]:
     return metrics
 
 def parse_file(filepath: str) -> List[Dict]:
+    metadata = {}
+    metadata_keys = {'platform', 'release', 'device', 'username', 'hostname', 'size', 'quantize', 'seed', 'uuid'}
+    
+    # First pass: collect metadata
+    with open(filepath, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if ':' in line:
+                key, value = line.split(':', 1)
+                key = key.strip()
+                if key in metadata_keys:
+                    metadata[key] = value.strip()
+    
+    # Second pass: parse results
     results = []
     current_text = ""
     step = 0
@@ -35,7 +49,8 @@ def parse_file(filepath: str) -> List[Dict]:
                     results.append({
                         'step': step,
                         'generated_text': current_text,
-                        **pending_metrics
+                        **pending_metrics,
+                        **metadata
                     })
                     pending_metrics = {}
             elif line and not any(x in line for x in ["enqueue in", "total", "ms"]):
@@ -46,7 +61,8 @@ def write_csv(results: List[Dict], output_file: str):
     if not results:
         return
     fieldnames = ['step', 'enqueue_latency_ms', 'total_latency_ms', 'tokens_per_sec', 
-                  'memory_throughput_gb_s', 'param_throughput_gb_s', 'generated_text']
+                  'memory_throughput_gb_s', 'param_throughput_gb_s', 'generated_text',
+                  'platform', 'release', 'device', 'username', 'hostname', 'size', 'quantize', 'seed', 'uuid']
     with open(output_file, 'w', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
@@ -61,7 +77,11 @@ def compute_summary(results: List[Dict]) -> Dict:
     metrics = ['enqueue_latency_ms', 'total_latency_ms', 'tokens_per_sec', 
                'memory_throughput_gb_s', 'param_throughput_gb_s']
     for metric in metrics:
-        values = [r.get(metric) for r in results]
+        values = []
+        for r in results:
+            v = r.get(metric)
+            if v is not None:
+                values.append(v)
         if values:
             summary[f'{metric}_min'] = min(values)
             summary[f'{metric}_max'] = max(values)
