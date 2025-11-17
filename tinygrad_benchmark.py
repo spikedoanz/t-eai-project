@@ -1,5 +1,5 @@
 """
-PYTHONPATH=./tinygrad/ python tinygrad_benchmark.py
+PYTHONPATH=./deps/tinygrad/ python tinygrad_benchmark.py
 """
 import os
 import uuid
@@ -12,12 +12,12 @@ AVAILABLE_MODELS    = [ None ]
 AVAILABLE_SIZES     = [("--size", _) for _ in ["1B", "8B", "70B", "405B"]]
 # --shard is skipped
 # --temperature is skipped
-AVAILABLE_QUANTS    = [()] + [("--quantize", _) for _ in ["int8", "nf4", "float16", "fp8"]]
+AVAILABLE_QUANTS    = [()] + [("--quantize", _) for _ in ["int8", "nf4", "float16"]] # fp8 disabled due to lack of hardware support
 
 # variables to sweep over
 SSEEDS  = [("--seed", str(_)) for _ in [42]]
 SSIZES  = [("--size", _) for _ in ["1B"]]
-SQUANTS = [()] + [("--quantize", _) for _ in ["int8", "nf4", "float16", "fp8"]]
+SQUANTS = [()] + [("--quantize", _) for _ in ["int8", "nf4", "float16"]]
 
 # SLEN    = [20] -- number of output tokens
 # SINPUT  = ["some string to pass in, or file to pass in, to test prefill"]
@@ -87,9 +87,9 @@ os.makedirs("benchmark_output", exist_ok=True)
 num_runs = len(configs)
 for config in configs[:num_runs]:
   filename, metadata = config_to_filename_and_metadata(config)
-  command = ["python", "tinygrad/examples/llama3.py"] + list(chain.from_iterable(config)) + ["--benchmark"]
+  command = ["python", "deps/tinygrad/examples/llama3.py"] + list(chain.from_iterable(config)) + ["--benchmark"]
   env = os.environ.copy()
-  env["PYTHONPATH"] = "./tinygrad/"
+  env["PYTHONPATH"] = "./deps/tinygrad/"
   
   try:
     with open(f"benchmark_output/{filename}", "w") as f:
