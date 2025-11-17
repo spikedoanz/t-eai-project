@@ -1,1 +1,3 @@
 benchmark_output/
+*build/
+*gguf
