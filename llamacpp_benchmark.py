@@ -11,7 +11,7 @@ from itertools import product, chain
 # variables from tinygrad_benchmark.py
 SSEEDS  = [("--seed", str(_)) for _ in [42]]
 SSIZES  = [("--size", _) for _ in ["1B"]]
-SQUANTS = [()] + [("--quantize", _) for _ in ["int8", "nf4", "float16", "fp8"]]
+SQUANTS = [()] + [("--quantize", _) for _ in ["int8", "nf4", "float16"]]
 
 SVARS   = [SSEEDS, SSIZES, SQUANTS]
 
@@ -21,7 +21,6 @@ MODEL_URLS = {
     "int8": "https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q8_0.gguf",
     "nf4": "https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q4_K_M.gguf",
     "float16": "https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-F16.gguf",
-    "fp8": "https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q2_K.gguf",  # closest approximation
 }
 
 def whoami():
@@ -42,7 +41,7 @@ def is_subset(a: List, b: List) -> bool:
     _b = [_[1] if _ else None for _ in b]
     return set(_a) <= set(_b)
 
-AVAILABLE_QUANTS = [()] + [("--quantize", _) for _ in ["int8", "nf4", "float16", "fp8"]]
+AVAILABLE_QUANTS = [()] + [("--quantize", _) for _ in ["int8", "nf4", "float16"]]
 assert is_subset(SQUANTS, AVAILABLE_QUANTS)
 
 # 2. generate benchmark commands (for subprocess)
