@@ -3,8 +3,8 @@
 
 # unsorted
 
-- move .gguf models into a centralized directory ./models/ instead of having multiple copies
-  - have a generalized setup process for downloading models, cloning repos, building everything and so on.
+* move .gguf models into a centralized directory ./models/ instead of having multiple copies
+- have a generalized setup process for downloading models, cloning repos, building everything and so on.
 
 # 1. setup
 - ssh instructions into a pixel
@@ -40,7 +40,6 @@
 ? what's the schema for data?
   ```python
   from typing import TypedDict
-
   class BenchmarkRow(TypedDict):
     step: int
     enqueue_latency_ms: float
