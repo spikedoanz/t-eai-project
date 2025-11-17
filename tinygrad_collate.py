@@ -26,7 +26,7 @@ def main():
         fieldnames = ['step', 'enqueue_latency_ms', 'total_latency_ms', 'tokens_per_sec', 
                       'memory_throughput_gb_s', 'param_throughput_gb_s', 'generated_text',
                       'platform', 'release', 'device', 'username', 'hostname', 'size', 'quantize', 'seed', 'uuid']
-        with open('tinygrad.csv', 'w', newline='') as f:
+        with open('benchmark_outputss/tinygrad.csv', 'w', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             for row in all_results:
