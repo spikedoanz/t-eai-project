@@ -5,13 +5,18 @@ from typing import List, Dict
 
 def main():
     output_dir = "benchmark_output"
-    files = [f for f in os.listdir(output_dir) if f.endswith('.txt')]
-    
+    # Only process tinygrad files (not llamacpp files)
+    files = [f for f in os.listdir(output_dir) if f.endswith('.txt') and not f.startswith('llamacpp_')]
+
     all_results = []
     for file in files:
         filepath = os.path.join(output_dir, file)
         # Run tinygrad_parse.py
-        subprocess.run(["python", "tinygrad_parse.py", filepath], check=True)
+        try:
+            subprocess.run(["python", "tinygrad_parse.py", filepath], check=True)
+        except subprocess.CalledProcessError:
+            print(f"Failed to parse {filepath}")
+            continue
         
         # Read the generated csv if it exists
         csv_file = filepath.replace('.txt', '.csv')
@@ -26,7 +31,7 @@ def main():
         fieldnames = ['step', 'enqueue_latency_ms', 'total_latency_ms', 'tokens_per_sec', 
                       'memory_throughput_gb_s', 'param_throughput_gb_s', 'generated_text',
                       'platform', 'release', 'device', 'username', 'hostname', 'size', 'quantize', 'seed', 'uuid']
-        with open('benchmark_outputss/tinygrad.csv', 'w', newline='') as f:
+        with open('benchmark_output/tinygrad.csv', 'w', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             for row in all_results:
