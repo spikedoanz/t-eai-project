@@ -1,0 +1,6 @@
+[submodule "deps/llama.cpp"]
+	path = deps/llama.cpp
+	url = https://github.com/ggml-org/llama.cpp
+[submodule "deps/tinygrad"]
+	path = deps/tinygrad
+	url = https://github.com/tinygrad/tinygrad
