@@ -4,12 +4,10 @@ Run llama-bench sweep over configs similar to tinygrad_benchmark.py
 import os
 import uuid
 import subprocess
-import json
-import pathlib
 from typing import List, Any
-from itertools import product, chain
+from itertools import product
 from tinygrad.helpers import fetch
-from defaults import MODEL_DIR, MODEL_URLS
+from defaults import MODEL_DIR, MODEL_CONFIGS
 
 # variables from tinygrad_benchmark.py
 SSEEDS  = [("--seed", str(_)) for _ in [42]]
@@ -85,10 +83,12 @@ num_runs = len(configs)
 for config in configs[:num_runs]:
     filename, metadata = config_to_filename_and_metadata(config)
     quantize = metadata['config']['quantize']
-    model_url = MODEL_URLS[quantize]
+    model_config = MODEL_CONFIGS[quantize]
+    model_url = model_config["url"]
+    model_suffix = model_config["suffix"]
 
     # Download model if not exists
-    model_filename = MODEL_DIR / f"Llama-3.2-1B-Instruct-{quantize.upper()}.gguf"
+    model_filename = MODEL_DIR / f"Llama-3.2-1B-Instruct-{model_suffix}.gguf"
     if not model_filename.exists():
         print(f"Downloading {model_filename}...")
         fetch(model_url, name=model_filename)
