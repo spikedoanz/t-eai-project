@@ -8,11 +8,10 @@
 Clone the project from GitHub using SSH authentication with recursive submodules:
 
 ```bash
-git clone --recursive git@github.com:username/t-eai-project.git
+git clone --recursive git@github.com:spikedoanz/t-eai-project.git
 cd t-eai-project
 ```
 
-Replace `username` with your GitHub username or the repository owner's username.
 
 ### Setup
 
