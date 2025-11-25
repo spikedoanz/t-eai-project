@@ -141,3 +141,10 @@ for planfile syntax
 * means resolved
 ! means answered
 ```
+
+
+for pixel 7, to enable opencl backend, add envvars
+```
+export LD_LIBRARY_PATH=/vendor/lib64/egl:/vendor/lib64:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/vendor/lib64:$LD_LIBRARY_PATH
+```
