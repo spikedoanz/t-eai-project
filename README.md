@@ -129,6 +129,15 @@ cd t-eai-project
 # 6. slides
 
 # 7. writeup
+
+# 8. remaining tasks
+
+- Implement verifiers benchmarking framework for downstream performance evaluation
+- Work on detailed research writeup in arXiv preprint format
+- Conduct full sweeps across all quantization strategies, models, and devices
+- Scale up benchmarking to include enterprise GPUs and public data sourcing
+- Prepare and deliver final presentation
+- Ensure codebase is well-tested, reproducible, and released under MIT license
 ```
 
 for planfile syntax
