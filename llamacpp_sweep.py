@@ -77,7 +77,7 @@ def run_benchmark(env: str, num_examples: int, max_tokens: int, port: int = None
         capture_output=True,
         text=True,
         env=env_vars,
-        timeout=600
+        timeout=7200  # 2 hours for large benchmark runs
     )
 
     return {

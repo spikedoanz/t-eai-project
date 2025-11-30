@@ -199,8 +199,6 @@
 #slide[
   = System Architecture
 
-  #v(0.5em)
-
   #align(center)[
     #rect(width: 90%, inset: 1em, stroke: 1pt)[
       #grid(
@@ -236,12 +234,60 @@
     ]
   ]
 
-  #v(0.5em)
-
   == Key Design Principles
   - *Reproducibility*: Seeded runs, UUID tracking
   - *Extensibility*: Easy to add new backends/devices
   - *Standardized schema*: Consistent CSV format across all backends
+]
+
+#slide[
+  = Benchmark Workflow
+
+  #align(center)[
+    #text(size: 16pt)[
+    #grid(
+      columns: (1fr),
+      gutter: 0.3em,
+      [
+        #rect(fill: rgb("#e3f2fd"), inset: 0.6em, width: 80%)[
+          *1. Model Preparation*
+
+          Download & quantize models (llama.cpp GGUF, tinygrad weights)
+        ]
+      ],
+      [
+        #align(center)[↓]
+      ],
+      [
+        #rect(fill: rgb("#fff3e0"), inset: 0.6em, width: 80%)[
+          *2. Run Benchmarks*
+
+          Execute across devices/quantizations → Raw `.txt` logs
+        ]
+      ],
+      [
+        #align(center)[↓]
+      ],
+      [
+        #rect(fill: rgb("#fce4ec"), inset: 0.6em, width: 80%)[
+          *3. Collate Results*
+
+          Parse logs → Structured CSV (UUID, metrics, metadata)
+        ]
+      ],
+      [
+        #align(center)[↓]
+      ],
+      [
+        #rect(fill: rgb("#e8f5e9"), inset: 0.6em, width: 80%)[
+          *4. Analysis & Visualization*
+
+          Generate plots → Embed in presentation
+        ]
+      ],
+    )
+    ]
+  ]
 ]
 
 #slide[
