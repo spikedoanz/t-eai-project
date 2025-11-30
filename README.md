@@ -62,6 +62,87 @@ cd t-eai-project
   python visualize_benchmarks.py
   ```
 
+### LLM Evaluation with Verifiers
+
+Run downstream task benchmarks (GSM8K math problems, etc.) using the [Prime Intellect verifiers](https://github.com/PrimeIntellect-ai/verifiers) framework.
+
+#### Initial Setup
+
+Install verifiers and benchmark environments:
+
+```bash
+uv add verifiers
+uv run vf-install gsm8k --from-repo
+```
+
+Other available environments: `math`, `gpqa`, `simpleqa`, `wordle`, `wiki-search`, etc.
+
+#### Architecture
+
+```
+verifiers (vf-eval) → openai_proxy.py:7777 → tinygrad:7776
+                      (non-streaming → streaming conversion)
+```
+
+The tinygrad server only supports streaming responses, but verifiers requires non-streaming. The proxy handles this conversion.
+
+#### Option 1: Automated Quantization Sweep
+
+Run benchmarks across all quantization options automatically:
+
+```bash
+python verifiers_sweep.py --env gsm8k --num-examples 20 --size 1B
+```
+
+Options:
+- `--env`: Verifiers environment (default: `gsm8k`)
+- `--num-examples`, `-n`: Examples per quantization (default: 5)
+- `--max-tokens`, `-t`: Max tokens to generate (default: 512)
+- `--size`: Model size - `1B`, `8B`, `70B`, `405B` (default: `1B`)
+
+Results are saved to `verifiers_results/sweep_<env>_<size>_<timestamp>.json`.
+
+Example output:
+```
+Summary:
+Quant        Reward Avg   Format Avg   Time (s)
+--------------------------------------------------
+default      0.000        1.000        69.7
+int8         0.000        1.000        54.5
+nf4          0.200        1.000        274.3
+float16      0.200        1.000        54.0
+```
+
+#### Option 2: Manual Single Run
+
+For running a single benchmark configuration manually:
+
+1. Start the tinygrad server (terminal 1):
+
+   ```bash
+   PYTHONPATH=./deps/tinygrad/ python tinygrad_benchmark.py --port 7776 --size 1B
+   # Add --quantize int8|nf4|float16 for quantized models
+   ```
+
+2. Start the OpenAI proxy (terminal 2):
+
+   ```bash
+   python openai_proxy.py --backend-port 7776 --proxy-port 7777
+   ```
+
+3. Run the benchmark (terminal 3):
+
+   ```bash
+   OPENAI_API_KEY=dummy uv run vf-eval gsm8k -m local -b http://localhost:7777/v1 -n 20 -r 1 -t 512
+   ```
+
+   Options:
+   - `-n`: Number of examples to evaluate
+   - `-r`: Rollouts per example
+   - `-t`: Max tokens to generate
+   - `-s`: Save results to disk
+   - `-v`: Verbose output
+
 # plan
 
 ```plan
@@ -77,6 +158,8 @@ cd t-eai-project
 - ssh instructions into a pixel
 - llama.cpp setup
 - mlc-llm setup
+> shafting this for now. build instructions are a bit too finickey.
+    > "we opted to skip mlc-llm for now because of the difficulty of the build process"
 * tinygrad setup
 - (can wait until later) automatic setup script from a curl | sh
 
@@ -90,8 +173,8 @@ cd t-eai-project
 # 3. actually sampling
 
 * run sweep for tinygrad
-  - on softmacs
-  - on pixel 7 pro
+  * on softmacs
+  * on pixel 7 pro
   - on pixel 7
 - repeat setup steps for A100 and H100 gpu
 - collate data into multiple csvs
@@ -105,7 +188,6 @@ cd t-eai-project
 # 5. analysis of data
 
 ? what's the schema for data?
-  ```python
   from typing import TypedDict
   class BenchmarkRow(TypedDict):
     step: int
@@ -124,7 +206,6 @@ cd t-eai-project
     quantize: str
     seed: int
     uuid: str
-  ```
 
 # 6. slides
 

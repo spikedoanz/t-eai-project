@@ -1,0 +1,102 @@
+[
+  {
+    "quantization": "default",
+    "size": "1B",
+    "environment": "gsm8k",
+    "num_examples": 5,
+    "max_tokens": 512,
+    "metrics": {
+      "reward": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "correct_answer_reward_func": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "format_reward_func": {
+        "avg": 1.0,
+        "std": 0.0
+      },
+      "eval_time_seconds": 62.24
+    },
+    "elapsed_seconds": 69.72406721115112,
+    "returncode": 0,
+    "timestamp": "2025-11-30T16:13:37.222787"
+  },
+  {
+    "quantization": "int8",
+    "size": "1B",
+    "environment": "gsm8k",
+    "num_examples": 5,
+    "max_tokens": 512,
+    "metrics": {
+      "reward": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "correct_answer_reward_func": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "format_reward_func": {
+        "avg": 1.0,
+        "std": 0.0
+      },
+      "eval_time_seconds": 46.95
+    },
+    "elapsed_seconds": 54.535102128982544,
+    "returncode": 0,
+    "timestamp": "2025-11-30T16:15:30.084921"
+  },
+  {
+    "quantization": "nf4",
+    "size": "1B",
+    "environment": "gsm8k",
+    "num_examples": 5,
+    "max_tokens": 512,
+    "metrics": {
+      "reward": {
+        "avg": 0.2,
+        "std": 0.4
+      },
+      "correct_answer_reward_func": {
+        "avg": 0.2,
+        "std": 0.4
+      },
+      "format_reward_func": {
+        "avg": 1.0,
+        "std": 0.0
+      },
+      "eval_time_seconds": 266.86
+    },
+    "elapsed_seconds": 274.25353598594666,
+    "returncode": 0,
+    "timestamp": "2025-11-30T16:21:15.747875"
+  },
+  {
+    "quantization": "float16",
+    "size": "1B",
+    "environment": "gsm8k",
+    "num_examples": 5,
+    "max_tokens": 512,
+    "metrics": {
+      "reward": {
+        "avg": 0.2,
+        "std": 0.4
+      },
+      "correct_answer_reward_func": {
+        "avg": 0.2,
+        "std": 0.4
+      },
+      "format_reward_func": {
+        "avg": 1.0,
+        "std": 0.0
+      },
+      "eval_time_seconds": 47.4
+    },
+    "elapsed_seconds": 53.989524841308594,
+    "returncode": 0,
+    "timestamp": "2025-11-30T16:22:22.871620"
+  }
+]
