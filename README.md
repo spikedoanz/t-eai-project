@@ -79,14 +79,21 @@ Other available environments: `math`, `gpqa`, `simpleqa`, `wordle`, `wiki-search
 
 #### Architecture
 
+**Tinygrad backend:**
 ```
 verifiers (vf-eval) → openai_proxy.py:7777 → tinygrad:7776
                       (non-streaming → streaming conversion)
 ```
-
 The tinygrad server only supports streaming responses, but verifiers requires non-streaming. The proxy handles this conversion.
 
-#### Option 1: Automated Quantization Sweep
+**llama.cpp backend:**
+```
+verifiers (vf-eval) → llama-server:8080
+                      (direct connection, no proxy needed)
+```
+The llama.cpp server natively supports non-streaming responses, so no proxy is required.
+
+#### Option 1: Tinygrad Automated Quantization Sweep
 
 Run benchmarks across all quantization options automatically:
 
@@ -113,7 +120,7 @@ nf4          0.200        1.000        274.3
 float16      0.200        1.000        54.0
 ```
 
-#### Option 2: Manual Single Run
+#### Option 2: Tinygrad Manual Single Run
 
 For running a single benchmark configuration manually:
 
@@ -142,6 +149,41 @@ For running a single benchmark configuration manually:
    - `-t`: Max tokens to generate
    - `-s`: Save results to disk
    - `-v`: Verbose output
+
+#### Option 3: llama.cpp Automated Quantization Sweep
+
+Run benchmarks across all quantization options automatically using the llama.cpp backend:
+
+```bash
+python llamacpp_sweep.py --env gsm8k --num-examples 20 --size 1B
+```
+
+Options:
+- `--env`: Verifiers environment (default: `gsm8k`)
+- `--num-examples`, `-n`: Examples per quantization (default: 5)
+- `--max-tokens`, `-t`: Max tokens to generate (default: 512)
+- `--size`: Model size - `1B`, `8B`, `70B`, `405B` (default: `1B`)
+
+Results are saved to `verifiers_results/llamacpp_sweep_<env>_<size>_<timestamp>.json`.
+
+#### Option 4: llama.cpp Manual Single Run
+
+For running a single benchmark configuration manually:
+
+1. Start the llama.cpp server (terminal 1):
+
+   ```bash
+   python llamacpp_benchmark.py --port 8080 --size 1B
+   # Add --quantize default|int8|nf4|float16 for different quantizations
+   ```
+
+2. Run the benchmark (terminal 2):
+
+   ```bash
+   OPENAI_API_KEY=dummy uv run vf-eval gsm8k -m local -b http://localhost:8080/v1 -n 20 -r 1 -t 512
+   ```
+
+   Note: No proxy is needed for llama.cpp since it natively supports non-streaming responses.
 
 # plan
 

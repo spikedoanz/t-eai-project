@@ -5,7 +5,7 @@
 #import "@preview/polylux:0.4.0": *
 
 #set page(paper: "presentation-16-9")
-#set text(font: "Libertinus Sans", size: 20pt)
+#set text(font: "JetBrainsMono NF", size: 20pt)
 
 #let footer-text = [Doan & Dinh | CSC 4228/6228 | Fall 2024]
 
@@ -408,72 +408,161 @@
   #v(0.5em)
 
   #align(center)[
-    // TODO: Replace with actual chart
-    #rect(width: 80%, height: 60%, stroke: 1pt + gray)[
-      #align(center + horizon)[
-        #text(size: 24pt, fill: gray)[
-          *Throughput Chart*
-
-          Tokens/sec across quantization levels
-
-          (Generated from `visualize_benchmarks.py`)
-        ]
-      ]
-    ]
+    #image("docs/images/backend_comparison.png", width: 85%)
   ]
 
   #v(0.5em)
 
-  *Key finding*: NF4 quantization achieves ~3-5 tok/s on MacBook M-series with 1B model
+  *Key findings*:
+  - llama.cpp excels with NF4 (46.4 tok/s) and default quantization (41.3 tok/s)
+  - tinygrad performs best with INT8 (27.5 tok/s) and float16 (25.4 tok/s)
+  - Performance varies significantly by quantization method
 ]
 
 #slide[
-  = Results: Memory vs Throughput Trade-offs
+  = Results: Speedup Analysis
 
   #v(0.5em)
 
   #align(center)[
-    #rect(width: 80%, height: 60%, stroke: 1pt + gray)[
-      #align(center + horizon)[
-        #text(size: 24pt, fill: gray)[
-          *Memory-Throughput Scatter Plot*
-
-          Comparing quantization strategies
-
-          (Generated from benchmark data)
-        ]
-      ]
-    ]
+    #image("docs/images/speedup_comparison.png", width: 85%)
   ]
 
   #v(0.5em)
 
-  *Observation*: INT4/NF4 provides best memory-performance ratio for edge deployment
+  *Observations*:
+  - llama.cpp shows 16.6x speedup over tinygrad for NF4 quantization
+  - tinygrad leads by 8.0x for float16 workloads
+  - INT8 and default quantizations show modest llama.cpp advantage (1.2-2.5x)
 ]
 
 #slide[
-  = Results: Device Comparison
+  = Results: Performance Summary
+
+  #v(0.5em)
+
+  #align(center)[
+    #image("docs/images/summary_stats.png", width: 85%)
+  ]
+
+  #v(0.5em)
+
+  *Backend comparison*:
+  - llama.cpp: Average 31.0 tok/s, peak 46.4 tok/s (NF4)
+  - tinygrad: Average 18.1 tok/s, peak 27.5 tok/s (INT8)
+  - Overall llama.cpp shows ~1.7x better average performance
+]
+
+#slide[
+  = Results: Quantization Impact
+
+  #v(0.5em)
+
+  #align(center)[
+    #image("docs/images/quantization_impact.png", width: 85%)
+  ]
+
+  #v(0.5em)
+
+  *Trends*:
+  - Different backends favor different quantization strategies
+  - llama.cpp benefits most from aggressive quantization (NF4)
+  - tinygrad shows more consistent performance across methods
+]
+
+#slide[
+  = Results: Latency Analysis
+
+  #v(0.5em)
+
+  #align(center)[
+    #image("docs/images/latency_distribution.png", width: 85%)
+  ]
+
+  #v(0.5em)
+
+  *Latency variance*:
+  - Box plots show distribution of per-token generation time
+  - llama.cpp shows lower variance for NF4 and default
+  - tinygrad has more consistent latency across quantizations
+]
+
+#slide[
+  = Results: Memory & Parameter Throughput
+
+  #v(0.5em)
+
+  #grid(
+    columns: (1fr, 1fr),
+    gutter: 1em,
+    [
+      #image("docs/images/memory_throughput.png", width: 100%)
+    ],
+    [
+      #image("docs/images/param_throughput.png", width: 100%)
+    ]
+  )
+
+  #v(0.5em)
+
+  *Observations*:
+  - Memory bandwidth closely correlates with tokens/sec
+  - Parameter throughput shows compute efficiency per quantization
+]
+
+#slide[
+  = Results: Multi-Device Comparison
+
+  #v(0.5em)
+
+  #align(center)[
+    #image("docs/images/device_comparison.png", width: 85%)
+  ]
+
+  #v(0.5em)
+
+  *Cross-device insights*:
+  - MacBook (softmacs) shows stronger performance overall
+  - Android device (localhost) exhibits different optimization characteristics
+  - Backend choice impacts relative performance across hardware
+]
+
+#slide[
+  = Results: Performance Summary Table
 
   #v(0.5em)
 
   #table(
-    columns: (1.5fr, 1fr, 1fr, 1fr),
+    columns: (1.5fr, 1fr, 1fr, 1fr, 1fr),
     inset: 10pt,
     align: horizon,
     table.header(
-      [*Device*], [*FP16*], [*INT8*], [*NF4*]
+      [*Backend*], [*Default*], [*FP16*], [*INT8*], [*NF4*]
     ),
-    [MacBook (Metal)], [~2 tok/s], [~3.5 tok/s], [~4 tok/s],
-    [Pixel 7 (OpenCL)], [TBD], [TBD], [TBD],
-    [Pixel 8 (OpenCL)], [TBD], [TBD], [TBD],
+    [llama.cpp], [41.3 tok/s], [3.2 tok/s], [33.2 tok/s], [46.4 tok/s],
+    [tinygrad], [16.6 tok/s], [25.4 tok/s], [27.5 tok/s], [2.8 tok/s],
   )
 
   #v(1em)
 
   #text(size: 16pt)[
-    *Note*: Results are from Llama-3.2-1B-Instruct model. Actual numbers vary with context length and workload.
+    *Note*: Results from Llama-3.2-1B-Instruct on MacBook (Metal). Actual performance varies with context length and workload.
   ]
 ]
+
+// ============================================================================
+// COMPLETED plots:
+// ✅ Latency distribution (box plots showing variance)
+// ✅ Memory throughput comparison (GB/s)
+// ✅ Parameter throughput comparison (GB/s)
+// ✅ Multi-device comparison (localhost vs softmacs)
+//
+// TODO: Additional plots still needed (missing data):
+// ❌ Memory usage comparison (MB per quantization level) - needs profiling
+// ❌ Energy consumption (watts/token) - needs power monitoring
+// ❌ Accuracy vs throughput scatter - verifiers data shows 0% accuracy
+// ❌ Context length impact - all runs use same context length
+// ============================================================================
 
 // ============================================================================
 // SECTION 5: CHALLENGES & LESSONS LEARNED

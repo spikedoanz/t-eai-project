@@ -46,6 +46,7 @@ def run_benchmark(env: str, num_examples: int, max_tokens: int) -> dict:
         "-n", str(num_examples),
         "-r", "1",
         "-t", str(max_tokens),
+        "--save-results",  # Persist runs to database for vf-tui
     ]
 
     env_vars = os.environ.copy()

@@ -1,0 +1,106 @@
+[
+  {
+    "quantization": "default",
+    "size": "1B",
+    "environment": "gsm8k",
+    "num_examples": 5,
+    "max_tokens": 512,
+    "metrics": {
+      "reward": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "correct_answer_reward_func": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "format_reward_func": {
+        "avg": 1.0,
+        "std": 0.0
+      },
+      "eval_time_seconds": 5.19
+    },
+    "elapsed_seconds": 13.745135068893433,
+    "returncode": 0,
+    "timestamp": "2025-11-30T17:48:34.535769",
+    "backend": "llamacpp"
+  },
+  {
+    "quantization": "int8",
+    "size": "1B",
+    "environment": "gsm8k",
+    "num_examples": 5,
+    "max_tokens": 512,
+    "metrics": {
+      "reward": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "correct_answer_reward_func": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "format_reward_func": {
+        "avg": 1.0,
+        "std": 0.0
+      },
+      "eval_time_seconds": 5.63
+    },
+    "elapsed_seconds": 11.918761014938354,
+    "returncode": 0,
+    "timestamp": "2025-11-30T17:49:46.940274",
+    "backend": "llamacpp"
+  },
+  {
+    "quantization": "nf4",
+    "size": "1B",
+    "environment": "gsm8k",
+    "num_examples": 5,
+    "max_tokens": 512,
+    "metrics": {
+      "reward": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "correct_answer_reward_func": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "format_reward_func": {
+        "avg": 1.0,
+        "std": 0.0
+      },
+      "eval_time_seconds": 4.3
+    },
+    "elapsed_seconds": 10.581537008285522,
+    "returncode": 0,
+    "timestamp": "2025-11-30T17:50:58.639029",
+    "backend": "llamacpp"
+  },
+  {
+    "quantization": "float16",
+    "size": "1B",
+    "environment": "gsm8k",
+    "num_examples": 5,
+    "max_tokens": 512,
+    "metrics": {
+      "reward": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "correct_answer_reward_func": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "format_reward_func": {
+        "avg": 1.0,
+        "std": 0.0
+      },
+      "eval_time_seconds": 6.45
+    },
+    "elapsed_seconds": 13.759949207305908,
+    "returncode": 0,
+    "timestamp": "2025-11-30T17:53:23.680143",
+    "backend": "llamacpp"
+  }
+]

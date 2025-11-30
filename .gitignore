@@ -3,3 +3,4 @@ benchmark_output/
 *gguf
 *__pycache__/
 *models/
+*bin
