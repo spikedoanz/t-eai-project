@@ -4,3 +4,6 @@
 [submodule "deps/tinygrad"]
 	path = deps/tinygrad
 	url = https://github.com/tinygrad/tinygrad
+[submodule "deps/verifiers"]
+	path = deps/verifiers
+	url = https://github.com/PrimeIntellect-ai/verifiers.git
