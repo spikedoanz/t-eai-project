@@ -247,16 +247,14 @@
 #slide[
   = Data Schema
 
-  #v(0.5em)
-
   Each benchmark run captures:
 
-  #text(size: 16pt)[
+  #text(size: 14pt)[
   ```
   BenchmarkRow:
     step: int                    # Token generation step
-    enqueue_latency_ms: float    # Time to enqueue operation
-    total_latency_ms: float      # Total time for step
+    enqueue_latency_ms: float    # Time to enqueue
+    total_latency_ms: float      # Total time
     tokens_per_sec: float        # Throughput
     memory_throughput_gb_s: float
     param_throughput_gb_s: float
@@ -274,20 +272,16 @@
 #slide[
   = Implementation: Tinygrad Backend
 
-  #v(0.5em)
-
   - Pure Python ML framework with Metal/OpenCL support
   - Server mode for OpenAI-compatible API
 
-  #v(0.5em)
-
+  #text(size: 16pt)[
   ```bash
   # Start inference server
   PYTHONPATH=./deps/tinygrad/ python tinygrad_benchmark.py \
       --port 7776 --size 1B
   ```
-
-  #v(0.5em)
+  ]
 
   == Quantization Support
   - `default`: No quantization
@@ -299,13 +293,10 @@
 #slide[
   = Implementation: llama.cpp Backend
 
-  #v(0.5em)
-
   - C/C++ implementation with GGUF model format
   - Highly optimized for CPU and GPU inference
 
-  #v(0.5em)
-
+  #text(size: 16pt)[
   ```bash
   # Run benchmark
   python llamacpp_benchmark.py
@@ -313,8 +304,7 @@
   # Collate results
   python llamacpp_collate.py
   ```
-
-  #v(0.5em)
+  ]
 
   == Key Features
   - Native quantization support in model files
@@ -325,15 +315,12 @@
 #slide[
   = LLM Evaluation: Verifiers Framework
 
-  #v(0.5em)
-
   Beyond raw throughput, we measure *downstream task accuracy*:
 
-  #v(0.5em)
-
+  #text(size: 14pt)[
   #grid(
     columns: (1fr, 1fr),
-    gutter: 2em,
+    gutter: 1em,
     [
       == Setup
       ```bash
@@ -359,8 +346,7 @@
       ```
     ]
   )
-
-  #v(0.5em)
+  ]
 
   Available benchmarks: `gsm8k`, `math`, `gpqa`, `simpleqa`, `wordle`
 ]
@@ -405,16 +391,12 @@
 #slide[
   = Results: Throughput Comparison
 
-  #v(0.5em)
-
   #align(center)[
-    #image("docs/images/backend_comparison.png", width: 85%)
+    #image("docs/images/backend_comparison.png", width: 90%)
   ]
 
-  #v(0.5em)
-
   *Key findings*:
-  - llama.cpp excels with NF4 (46.4 tok/s) and default quantization (41.3 tok/s)
+  - llama.cpp excels with NF4 (46.4 tok/s) and default (41.3 tok/s)
   - tinygrad performs best with INT8 (27.5 tok/s) and float16 (25.4 tok/s)
   - Performance varies significantly by quantization method
 ]
@@ -422,30 +404,22 @@
 #slide[
   = Results: Speedup Analysis
 
-  #v(0.5em)
-
   #align(center)[
-    #image("docs/images/speedup_comparison.png", width: 85%)
+    #image("docs/images/speedup_comparison.png", width: 90%)
   ]
 
-  #v(0.5em)
-
   *Observations*:
-  - llama.cpp shows 16.6x speedup over tinygrad for NF4 quantization
+  - llama.cpp shows 16.6x speedup over tinygrad for NF4
   - tinygrad leads by 8.0x for float16 workloads
-  - INT8 and default quantizations show modest llama.cpp advantage (1.2-2.5x)
+  - INT8 and default show modest llama.cpp advantage (1.2-2.5x)
 ]
 
 #slide[
   = Results: Performance Summary
 
-  #v(0.5em)
-
   #align(center)[
-    #image("docs/images/summary_stats.png", width: 85%)
+    #image("docs/images/summary_stats.png", width: 90%)
   ]
-
-  #v(0.5em)
 
   *Backend comparison*:
   - llama.cpp: Average 31.0 tok/s, peak 46.4 tok/s (NF4)
@@ -456,13 +430,9 @@
 #slide[
   = Results: Quantization Impact
 
-  #v(0.5em)
-
   #align(center)[
-    #image("docs/images/quantization_impact.png", width: 85%)
+    #image("docs/images/quantization_impact.png", width: 90%)
   ]
-
-  #v(0.5em)
 
   *Trends*:
   - Different backends favor different quantization strategies
@@ -473,13 +443,9 @@
 #slide[
   = Results: Latency Analysis
 
-  #v(0.5em)
-
   #align(center)[
-    #image("docs/images/latency_distribution.png", width: 85%)
+    #image("docs/images/latency_distribution.png", width: 90%)
   ]
-
-  #v(0.5em)
 
   *Latency variance*:
   - Box plots show distribution of per-token generation time
@@ -489,8 +455,6 @@
 
 #slide[
   = Results: Memory & Parameter Throughput
-
-  #v(0.5em)
 
   #grid(
     columns: (1fr, 1fr),
@@ -503,8 +467,6 @@
     ]
   )
 
-  #v(0.5em)
-
   *Observations*:
   - Memory bandwidth closely correlates with tokens/sec
   - Parameter throughput shows compute efficiency per quantization
@@ -513,24 +475,18 @@
 #slide[
   = Results: Multi-Device Comparison
 
-  #v(0.5em)
-
   #align(center)[
-    #image("docs/images/device_comparison.png", width: 85%)
+    #image("docs/images/device_comparison.png", width: 90%)
   ]
-
-  #v(0.5em)
 
   *Cross-device insights*:
   - MacBook (softmacs) shows stronger performance overall
-  - Android device (localhost) exhibits different optimization characteristics
+  - Android device (localhost) exhibits different characteristics
   - Backend choice impacts relative performance across hardware
 ]
 
 #slide[
   = Results: Performance Summary Table
-
-  #v(0.5em)
 
   #table(
     columns: (1.5fr, 1fr, 1fr, 1fr, 1fr),
@@ -543,10 +499,10 @@
     [tinygrad], [16.6 tok/s], [25.4 tok/s], [27.5 tok/s], [2.8 tok/s],
   )
 
-  #v(1em)
+  #v(0.5em)
 
-  #text(size: 16pt)[
-    *Note*: Results from Llama-3.2-1B-Instruct on MacBook (Metal). Actual performance varies with context length and workload.
+  #text(size: 14pt)[
+    *Note*: Results from Llama-3.2-1B-Instruct on MacBook (Metal). Performance varies with context length and workload.
   ]
 ]
 
@@ -571,18 +527,15 @@
 #slide[
   = Challenges Encountered
 
-  #v(0.5em)
-
   #grid(
     columns: (1fr, 1fr),
-    gutter: 2em,
+    gutter: 1.5em,
     [
       == Software Compatibility
       - Different backends for ARM vs x86
       - MLC-LLM build complexity
-        - "Opted to skip due to finicky build process"
 
-      #v(1em)
+      #v(0.5em)
 
       == Implementation Inconsistencies
       - Quantization standards differ across backends
@@ -592,9 +545,8 @@
       == Engineering Challenges
       - Creating durable benchmarking suite
       - Handling device-specific configurations
-        - Pixel 7 OpenCL requires special env vars
 
-      #v(1em)
+      #v(0.5em)
 
       == Android Setup
       - SSH into Pixel devices
@@ -610,18 +562,16 @@
 #slide[
   = Contributions
 
-  #v(0.5em)
-
   #grid(
     columns: (1fr, 1fr),
-    gutter: 2em,
+    gutter: 1.5em,
     [
       == Reproducible Framework
       - Open-source benchmarking toolkit
       - Standardized data format
       - Easy to extend to new devices
 
-      #v(1em)
+      #v(0.5em)
 
       == Public Codebase
       - MIT licensed
@@ -634,7 +584,7 @@
       - Quantization trade-off analysis
       - Downstream accuracy evaluation
 
-      #v(1em)
+      #v(0.5em)
 
       == Community Benefit
       - Others can benchmark their devices
@@ -646,15 +596,13 @@
 #slide[
   = Future Work
 
-  #v(0.5em)
-
   - *Enterprise GPUs*: Extend benchmarks to A100, H100
   - *More Models*: Phi-3 mini, Qwen2.5-3B, Llama-3.1-8B
   - *Energy Profiling*: Watt/token measurements
   - *KV-Cache Quantization*: INT8/INT4 cache strategies
   - *Longer Contexts*: Prefill tokens 256, 1024, 2048
 
-  #v(1em)
+  #v(0.5em)
 
   == Potential Extensions
   - Automated setup script (`curl | sh`)
@@ -665,24 +613,22 @@
 #slide[
   = Conclusion
 
-  #v(1em)
-
   - *Quantization enables practical edge LLM deployment*
     - 4-bit models run on smartphones with acceptable performance
 
-  #v(0.5em)
+  #v(0.3em)
 
   - *Trade-offs are workload-dependent*
     - Memory-constrained? → INT4/NF4
     - Accuracy-critical? → INT8 or FP16
 
-  #v(0.5em)
+  #v(0.3em)
 
   - *Framework enables reproducible research*
     - Standardized benchmarks across diverse hardware
     - Community can contribute additional results
 
-  #v(1em)
+  #v(0.5em)
 
   #align(center)[
     #text(size: 18pt)[
