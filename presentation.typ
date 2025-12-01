@@ -53,6 +53,19 @@
   )
 }
 
+// Colorful heading styles
+#show heading.where(level: 1): it => {
+  text(fill: mocha-mauve, weight: "bold", it)
+}
+
+#show heading.where(level: 2): it => {
+  text(fill: mocha-blue, weight: "bold", it)
+}
+
+#show heading.where(level: 3): it => {
+  text(fill: mocha-teal, weight: "bold", it)
+}
+
 #let footer-text = [Doan & Dinh | CSC 4228/6228 | Fall 2024]
 
 // ============================================================================
@@ -62,22 +75,22 @@
 #slide[
   #set page(footer: align(center, footer-text), footer-descent: 1em)
   #align(center + horizon)[
-    #text(size: 36pt, weight: "bold")[Comparing Quantization Across Hardware]
+    #text(size: 36pt, weight: "bold", fill: mocha-mauve)[Comparing Quantization Across Hardware]
 
     #v(1em)
 
-    #text(size: 24pt)[Benchmarking LLM Inference on Edge Devices]
+    #text(size: 24pt, fill: mocha-blue)[Benchmarking LLM Inference on Edge Devices]
 
     #v(2em)
 
     #text(size: 18pt)[
-      *Mike Doan* · *Jenny Dinh*
+      #text(fill: mocha-pink)[*Mike Doan*] · #text(fill: mocha-pink)[*Jenny Dinh*]
 
-      CSC 4228 & 6228 — Security in IoT
+      #text(fill: mocha-lavender)[CSC 4228 & 6228 — Security in IoT]
 
-      Georgia State University
+      #text(fill: mocha-sapphire)[Georgia State University]
 
-      Fall 2024
+      #text(fill: mocha-teal)[Fall 2024]
     ]
   ]
 ]
@@ -93,19 +106,19 @@
 
   == The Rise of Local LLM Deployment
 
-  - Growing interest in running LLMs *locally* rather than via cloud APIs
+  - Growing interest in running LLMs #text(fill: mocha-green)[*locally*] rather than via cloud APIs
   - Target environments:
-    - *Edge devices*: smartphones, embedded systems
-    - *Consumer hardware*: laptops, gaming PCs
-    - *Enterprise GPUs*: data center deployments
+    - #text(fill: mocha-peach)[*Edge devices*]: smartphones, embedded systems
+    - #text(fill: mocha-blue)[*Consumer hardware*]: laptops, gaming PCs
+    - #text(fill: mocha-mauve)[*Enterprise GPUs*]: data center deployments
 
   #v(1em)
 
   == The Memory Challenge
 
-  - LLMs contain *massive weights* requiring significant memory
+  - LLMs contain #text(fill: mocha-red)[*massive weights*] requiring significant memory
   - Activations during inference are also substantial
-  - Example: Llama-3.1-8B requires ~16GB in FP16
+  - Example: #text(fill: mocha-yellow)[Llama-3.1-8B] requires ~16GB in FP16
 ]
 
 #slide[
@@ -113,7 +126,7 @@
 
   #v(1em)
 
-  *Quantization* reduces the precision of model weights and activations to decrease memory footprint and improve inference speed.
+  #text(fill: mocha-green)[*Quantization*] reduces the precision of model weights and activations to decrease #text(fill: mocha-peach)[memory footprint] and improve #text(fill: mocha-sky)[inference speed].
 
   #v(1em)
 
@@ -132,7 +145,7 @@
 
   #v(1em)
 
-  *Trade-off*: Lower precision → smaller memory, faster inference, but potential accuracy loss
+  #text(fill: mocha-yellow)[*Trade-off*]: Lower precision → #text(fill: mocha-green)[smaller memory], #text(fill: mocha-blue)[faster inference], but #text(fill: mocha-red)[potential accuracy loss]
 ]
 
 #slide[
@@ -145,25 +158,25 @@
     gutter: 2em,
     [
       == Weight-Only Quantization
-      - *INT8*: 8-bit integer weights
-      - *INT4*: 4-bit integer weights
-      - *NF4*: 4-bit NormalFloat (QLoRA)
+      - #text(fill: mocha-green)[*INT8*]: 8-bit integer weights
+      - #text(fill: mocha-yellow)[*INT4*]: 4-bit integer weights
+      - #text(fill: mocha-peach)[*NF4*]: 4-bit NormalFloat (QLoRA)
 
       #v(1em)
 
       == Group-wise Quantization
-      - *GPTQ*: Post-training quantization
-      - *AWQ*: Activation-aware weights
+      - #text(fill: mocha-mauve)[*GPTQ*]: Post-training quantization
+      - #text(fill: mocha-pink)[*AWQ*]: Activation-aware weights
     ],
     [
       == KV-Cache Quantization
       - Reduces memory for long contexts
-      - INT8 or INT4 KV cache
+      - #text(fill: mocha-sky)[INT8] or #text(fill: mocha-sapphire)[INT4] KV cache
 
       #v(1em)
 
       == Activation Quantization
-      - *W8A8*: Both weights and activations in INT8
+      - #text(fill: mocha-blue)[*W8A8*]: Both weights and activations in INT8
       - *W4A4*: Aggressive 4-bit for both
     ]
   )
@@ -182,19 +195,19 @@
 
   #v(0.5em)
 
-  + How do different *quantization strategies* impact inference performance across hardware?
+  + How do different #text(fill: mocha-peach)[*quantization strategies*] impact inference performance across hardware?
 
-  + What are the *accuracy-efficiency trade-offs* for edge deployment?
+  + What are the #text(fill: mocha-yellow)[*accuracy-efficiency trade-offs*] for edge deployment?
 
-  + Can we create a *reproducible benchmarking framework* for the community?
+  + Can we create a #text(fill: mocha-green)[*reproducible benchmarking framework*] for the community?
 
   #v(1em)
 
   == Gap in Existing Work
 
-  - Few plug-and-play toolkits for *cross-platform quantization sweeps*
-  - Limited public data on *edge device performance*
-  - Need for standardized comparison methodology
+  - Few plug-and-play toolkits for #text(fill: mocha-mauve)[*cross-platform quantization sweeps*]
+  - Limited public data on #text(fill: mocha-pink)[*edge device performance*]
+  - Need for #text(fill: mocha-blue)[standardized comparison methodology]
 ]
 
 #slide[
@@ -789,25 +802,25 @@
 #slide[
   = Conclusion
 
-  - *Quantization enables practical edge LLM deployment*
+  - #text(fill: mocha-green)[*Quantization enables practical edge LLM deployment*]
     - 4-bit models run on smartphones with acceptable performance
 
   #v(0.3em)
 
-  - *Trade-offs are workload-dependent*
-    - Memory-constrained? → INT4/NF4
-    - Accuracy-critical? → INT8 or FP16
+  - #text(fill: mocha-yellow)[*Trade-offs are workload-dependent*]
+    - Memory-constrained? → #text(fill: mocha-peach)[INT4/NF4]
+    - Accuracy-critical? → #text(fill: mocha-blue)[INT8] or #text(fill: mocha-mauve)[FP16]
 
   #v(0.3em)
 
-  - *Framework enables reproducible research*
+  - #text(fill: mocha-pink)[*Framework enables reproducible research*]
     - Standardized benchmarks across diverse hardware
     - Community can contribute additional results
 
   #v(0.5em)
 
   #align(center)[
-    #text(size: 18pt)[
+    #text(size: 18pt, fill: mocha-sapphire)[
       *Code*: `github.com/spikedoanz/t-eai-project`
     ]
   ]
@@ -842,20 +855,20 @@
 #slide[
   #set page(footer: align(center, footer-text), footer-descent: 1em)
   #align(center + horizon)[
-    #text(size: 36pt, weight: "bold")[Thank You!]
+    #text(size: 36pt, weight: "bold", fill: mocha-mauve)[Thank You!]
 
     #v(2em)
 
     #text(size: 20pt)[
-      *Questions?*
+      #text(fill: mocha-pink)[*Questions?*]
 
       #v(1em)
 
-      Mike Doan · Jenny Dinh
+      #text(fill: mocha-blue)[Mike Doan] · #text(fill: mocha-blue)[Jenny Dinh]
 
       #v(1em)
 
-      `github.com/spikedoanz/t-eai-project`
+      #text(fill: mocha-sapphire)[`github.com/spikedoanz/t-eai-project`]
     ]
   ]
 ]
