@@ -739,24 +739,18 @@
 ]
 
 #slide[
-  #figure(
-    [
-      #text(size: 24pt, fill: mocha-mauve, weight: "bold")[Results: Quantization Impact]
+  #text(size: 24pt, fill: mocha-mauve, weight: "bold")[Results: Quantization Impact]
 
-      #v(0.5em)
+  #align(center)[
+    #image("docs/images/quantization_impact.png", width: 75%)
+  ]
 
-      #image("docs/images/quantization_impact.png", width: 85%)
-
-      #v(0.3em)
-
-      #text(size: 15pt)[
-      *Trends*:
-      - Different backends favor different quantization strategies
-      - llama.cpp benefits most from aggressive quantization (NF4)
-      - tinygrad shows more consistent performance across methods
-      ]
-    ]
-  )
+  #text(size: 14pt)[
+  *Trends*:
+  - Different backends favor different quantization strategies
+  - llama.cpp benefits most from aggressive quantization (NF4)
+  - tinygrad shows more consistent performance across methods
+  ]
 ]
 
 #slide[
