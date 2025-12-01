@@ -1,5 +1,12 @@
+> **Note**: For complete Pixel 7/8 setup including benchmarking, see the automated setup script:
+> - **Full setup**: `setup/pixel7_setup.sh`
+> - **Benchmark guide**: `setup/PIXEL-BENCHMARK.md`
+> - **Troubleshooting**: `setup/PIXEL-TROUBLESHOOTING.md`
+>
+> This document provides a quick reference for SSH-only setup.
+
 0. install tailscale from playstore and add phone to tailnet
-    
+
 1. install and setup ssh portal
 ```
 pkg install ssh

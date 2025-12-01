@@ -1,0 +1,13 @@
+# Python dependencies for t-eai-project
+# For use with pip on Termux/Android devices where uv is not available
+#
+# Installation:
+#   pip3 install --user -r requirements.txt
+#
+# Note: tinygrad is used from git submodule at deps/tinygrad/
+# Add to PYTHONPATH instead of installing via pip:
+#   export PYTHONPATH="$HOME/t-eai-project/deps/tinygrad:$PYTHONPATH"
+
+bottle>=0.13.4
+tiktoken>=0.12.0
+verifiers>=0.1.8.post1

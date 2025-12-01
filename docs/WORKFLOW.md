@@ -84,7 +84,18 @@ This document explains the complete workflow for running benchmarks and generati
 
 The Pixel devices require additional setup for benchmarking.
 
-> **Note**: See also `setup/PIXEL-SSH.md` for detailed SSH setup instructions.
+> **Quick Setup**: Use the automated setup script for complete installation:
+> ```bash
+> bash <(curl -sL https://raw.githubusercontent.com/spikedoanz/t-eai-project/master/setup/pixel7_setup.sh)
+> ```
+>
+> **Documentation**:
+> - **Automated setup**: `setup/pixel7_setup.sh` (recommended)
+> - **Benchmark guide**: `setup/PIXEL-BENCHMARK.md`
+> - **Troubleshooting**: `setup/PIXEL-TROUBLESHOOTING.md`
+> - **SSH-only setup**: `setup/PIXEL-SSH.md`
+>
+> The sections below provide manual setup instructions for reference.
 
 **Prerequisites:**
 - Pixel 7 or Pixel 8 device

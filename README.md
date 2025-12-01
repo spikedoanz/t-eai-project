@@ -3,6 +3,29 @@
 
 ## Getting Started
 
+### Pixel 7/8 Devices (Android/Termux)
+
+For Pixel devices, use the automated setup script:
+
+```bash
+# In Termux (installed from F-Droid)
+bash <(curl -sL https://raw.githubusercontent.com/spikedoanz/t-eai-project/master/setup/pixel7_setup.sh)
+```
+
+After setup completes, run benchmarks with:
+```bash
+cd ~/t-eai-project
+./pixel_benchmark_wrapper.sh
+```
+
+**Documentation**:
+- [Automated Setup Script](setup/pixel7_setup.sh)
+- [Benchmark Execution Guide](setup/PIXEL-BENCHMARK.md)
+- [Troubleshooting Guide](setup/PIXEL-TROUBLESHOOTING.md)
+- [Complete Workflow](docs/WORKFLOW.md)
+
+### Desktop/Server Setup
+
 ### Cloning the Repository
 
 Clone the project from GitHub using SSH authentication with recursive submodules:
