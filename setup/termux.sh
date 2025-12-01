@@ -1,8 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# Pixel 7/8 Benchmark Setup Script for t-eai-project (tinygrad backend)
+# Pixel 7/8 Benchmark Setup & Run Script for t-eai-project (tinygrad backend)
 #
 # This script automates the complete setup from blank Termux installation
-# to a ready-to-benchmark environment for LLM inference testing.
+# to running LLM inference benchmarks.
 #
 # Prerequisites:
 #   - Termux installed from F-Droid (NOT Play Store)
@@ -10,12 +10,14 @@
 #   - Stable internet connection
 #
 # Usage:
+#   # Setup only:
 #   bash <(curl -sL https://raw.githubusercontent.com/spikedoanz/t-eai-project/master/setup/termux.sh)
 #
-#   Or manually:
-#   curl -O https://raw.githubusercontent.com/spikedoanz/t-eai-project/master/setup/termux.sh
-#   chmod +x termux.sh
-#   ./termux.sh
+#   # Setup and run benchmarks:
+#   bash <(curl -sL https://raw.githubusercontent.com/spikedoanz/t-eai-project/master/setup/termux.sh) --benchmark
+#
+#   # Run benchmarks only (after setup):
+#   ./setup/termux.sh --benchmark
 
 set -e  # Exit on error
 set -u  # Exit on undefined variable
@@ -28,6 +30,30 @@ REPO_URL="git@github.com:spikedoanz/t-eai-project.git"
 PROJECT_DIR="$HOME/t-eai-project"
 PYTHON_MIN_VERSION="3.11"
 REQUIRED_STORAGE_GB=5
+RUN_BENCHMARK=false
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --benchmark)
+            RUN_BENCHMARK=true
+            shift
+            ;;
+        --help)
+            echo "Usage: $0 [OPTIONS]"
+            echo ""
+            echo "Options:"
+            echo "  --benchmark      Run benchmarks after setup (or run benchmarks only if already set up)"
+            echo "  --help           Show this help message"
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Run with --help for usage information"
+            exit 1
+            ;;
+    esac
+done
 
 # ============================================================================
 # COLOR OUTPUT HELPERS
@@ -100,7 +126,6 @@ skip_if_exists() {
 
     if [ -f "$marker_file" ]; then
         info "Phase '$phase_name' already completed (marker: $marker_file)"
-        info "To re-run, remove marker file: rm $marker_file"
         return 0  # Skip this phase
     fi
     return 1  # Don't skip
@@ -134,7 +159,10 @@ phase0_preflight() {
     echo "  4. Configure OpenCL for GPU acceleration"
     echo "  5. Clone t-eai-project repository"
     echo "  6. Setup Python environment"
-    echo "  7. Prepare for model downloads"
+    echo "  7. Download models"
+    if [ "$RUN_BENCHMARK" = true ]; then
+        echo "  8. Run performance benchmarks"
+    fi
     echo ""
     echo "Estimated time: 5-10 minutes (or seconds if cached)"
     echo "Required storage: ${REQUIRED_STORAGE_GB}GB"
@@ -260,22 +288,19 @@ phase3_croc() {
     else
         info "Installing croc via Go..."
 
-        # Ensure Go bin is in PATH
-        if ! grep -q "go/bin" ~/.bashrc; then
-            echo 'export PATH=$PATH:~/go/bin' >> ~/.bashrc
-        fi
+        # Ensure Go bin is in PATH for this session
         export PATH=$PATH:~/go/bin
 
         go install github.com/schollz/croc/v10@latest || error "Failed to install croc"
 
         if ! command -v croc &> /dev/null; then
-            warn "croc installed but not in PATH. Add ~/go/bin to PATH and restart shell"
+            warn "croc installed but not in PATH. Will be available after adding ~/go/bin to PATH"
         fi
     fi
 
     info "croc usage:"
-    echo "  To send files:    croc send <filename>"
-    echo "  To receive files: croc <code-from-sender>"
+    echo "  To send files:    ~/go/bin/croc send <filename>"
+    echo "  To receive files: ~/go/bin/croc <code-from-sender>"
 
     create_marker "$MARKER"
     success "Phase 3 complete: croc installed"
@@ -304,11 +329,6 @@ phase4_opencl() {
     else
         warn "/system/vendor/lib64 not found. GPU acceleration may not work"
     fi
-
-    info "OpenCL environment variables will be set by benchmark wrapper script"
-    echo "  Required environment variables:"
-    echo "    LD_LIBRARY_PATH=/system/vendor/lib64:\$LD_LIBRARY_PATH"
-    echo "    GPU=1 OPENCL=1"
 
     create_marker "$MARKER"
     success "Phase 4 complete: OpenCL verified"
@@ -362,10 +382,6 @@ phase6_python() {
 
     cd "$PROJECT_DIR"
 
-    # Upgrade pip
-    info "Upgrading pip..."
-    python3 -m pip install --upgrade pip --user || warn "pip upgrade failed (continuing anyway)"
-
     # Install dependencies
     info "Installing Python dependencies..."
 
@@ -374,7 +390,7 @@ phase6_python() {
         info "Required Python packages already installed"
     else
         info "Installing missing Python packages..."
-        python3 -m pip install --user bottle tiktoken || error "Failed to install dependencies"
+        pip install --user bottle tiktoken || error "Failed to install dependencies"
     fi
 
     # Verify imports (with PYTHONPATH set for tinygrad)
@@ -387,16 +403,16 @@ phase6_python() {
 }
 
 # ============================================================================
-# PHASE 7: MODEL DOWNLOAD PREPARATION
+# PHASE 7: MODEL DOWNLOAD
 # ============================================================================
 
 phase7_models() {
     local MARKER="$HOME/.setup_markers/phase7_models"
-    if skip_if_exists "$MARKER" "Model Download Preparation"; then
+    if skip_if_exists "$MARKER" "Model Download"; then
         return 0
     fi
 
-    info "PHASE 7: Model download preparation..."
+    info "PHASE 7: Downloading models..."
 
     cd "$PROJECT_DIR"
 
@@ -404,47 +420,122 @@ phase7_models() {
     TINYGRAD_CACHE="$HOME/.cache/tinygrad/downloads"
     LLAMA_1B_DIR="$TINYGRAD_CACHE/llama3-1b-instruct"
 
-    info "Model information:"
-    echo "  Tinygrad automatically downloads models on first run"
-    echo "  Cache location: $TINYGRAD_CACHE"
-    echo ""
-    echo "  For 1B model (Llama-3.2-1B-Instruct):"
-    echo "    - Base model (Q6_K GGUF): ~1.2GB"
-    echo "    - Tokenizer: ~2MB"
-    echo ""
-    echo "  Quantization is applied at runtime by tinygrad:"
-    echo "    - default: Q6_K (from GGUF file)"
-    echo "    - int8: converted at load time"
-    echo "    - nf4: converted at load time"
-    echo "    - float16: converted at load time"
-    echo ""
-
     # Check if model already exists in tinygrad cache
     if [ -f "$LLAMA_1B_DIR/Llama-3.2-1B-Instruct-Q6_K.gguf" ]; then
         info "Found existing model in tinygrad cache:"
-        ls -lh "$LLAMA_1B_DIR/" | awk '{print "  - " $9 " (" $5 ")"}'
+        ls -lh "$LLAMA_1B_DIR/" 2>/dev/null | tail -n +2 | awk '{print "  - " $9 " (" $5 ")"}'
         success "Model already downloaded"
     else
-        info "No model found in cache. Model will be downloaded automatically during first benchmark run"
-        info "Or pre-download now with:"
-        echo "  cd $PROJECT_DIR"
-        echo "  PYTHONPATH=./deps/tinygrad python3 -c \\"
-        echo "    'from tinygrad.helpers import fetch; \\"
-        echo "     fetch(\"https://huggingface.co/bofenghuang/Meta-Llama-3-8B/resolve/main/original/tokenizer.model\", \"tokenizer.model\", subdir=\"llama3-1b-instruct\"); \\"
-        echo "     fetch(\"https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q6_K.gguf\", \"Llama-3.2-1B-Instruct-Q6_K.gguf\", subdir=\"llama3-1b-instruct\")'"
+        info "Downloading Llama-3.2-1B-Instruct model (~1.2GB)..."
+
+        # Set environment for tinygrad
+        export LD_LIBRARY_PATH=/system/vendor/lib64:${LD_LIBRARY_PATH:-}
+        export GPU=1
+        export OPENCL=1
+        export PYTHONPATH="$PROJECT_DIR/deps/tinygrad"
+
+        python3 -c '
+from tinygrad.helpers import fetch
+print("Downloading tokenizer...")
+fetch("https://huggingface.co/bofenghuang/Meta-Llama-3-8B/resolve/main/original/tokenizer.model", "tokenizer.model", subdir="llama3-1b-instruct")
+print("Downloading model (this may take a few minutes)...")
+fetch("https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q6_K.gguf", "Llama-3.2-1B-Instruct-Q6_K.gguf", subdir="llama3-1b-instruct")
+print("Download complete!")
+' || error "Failed to download model"
+
+        success "Model downloaded"
     fi
 
     create_marker "$MARKER"
-    success "Phase 7 complete: Ready for model downloads"
+    success "Phase 7 complete: Models ready"
 }
 
 # ============================================================================
-# PHASE 8: VERIFICATION AND NEXT STEPS
+# PHASE 8: RUN BENCHMARKS
 # ============================================================================
 
-phase8_verify() {
-    info "PHASE 8: Final verification..."
+phase8_benchmark() {
+    if [ "$RUN_BENCHMARK" != true ]; then
+        return 0
+    fi
 
+    info "PHASE 8: Running performance benchmarks..."
+
+    cd "$PROJECT_DIR"
+
+    # Set environment for tinygrad with GPU
+    export LD_LIBRARY_PATH=/system/vendor/lib64:${LD_LIBRARY_PATH:-}
+    export GPU=1
+    export OPENCL=1
+    export PYTHONPATH="$PROJECT_DIR/deps/tinygrad"
+
+    echo ""
+    echo "=========================================="
+    echo "  Running Benchmarks"
+    echo "  Quantizations: default, int8, nf4, float16"
+    echo "=========================================="
+    echo ""
+
+    START_TIME=$(date +%s)
+
+    # Run benchmarks
+    info "Running tinygrad_benchmark.py..."
+    if python3 tinygrad_benchmark.py; then
+        success "Performance benchmarks completed"
+    else
+        error "Performance benchmarks failed"
+    fi
+
+    # Collate results
+    info "Collating results..."
+    if python3 tinygrad_collate.py 2>/dev/null || python3 llamacpp_collate.py 2>/dev/null; then
+        success "Results collated"
+    else
+        warn "Collation script not found (raw results still available in benchmark_output/)"
+    fi
+
+    # Package results
+    info "Packaging results..."
+    TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+    HOSTNAME=$(hostname)
+    RESULT_ARCHIVE="pixel_results_${HOSTNAME}_${TIMESTAMP}.tar.gz"
+
+    tar -czf "$RESULT_ARCHIVE" \
+        benchmark_output/*.txt \
+        benchmark_output/*.csv \
+        2>/dev/null || warn "Some result files may be missing from archive"
+
+    END_TIME=$(date +%s)
+    ELAPSED=$((END_TIME - START_TIME))
+    ELAPSED_MIN=$((ELAPSED / 60))
+    ELAPSED_SEC=$((ELAPSED % 60))
+
+    if [ -f "$RESULT_ARCHIVE" ]; then
+        ARCHIVE_SIZE=$(du -h "$RESULT_ARCHIVE" | cut -f1)
+        echo ""
+        echo "=========================================="
+        echo "  Benchmark Complete!"
+        echo "=========================================="
+        echo ""
+        echo "Results summary:"
+        echo "  Archive: $RESULT_ARCHIVE"
+        echo "  Size: $ARCHIVE_SIZE"
+        echo "  Time elapsed: ${ELAPSED_MIN}m ${ELAPSED_SEC}s"
+        echo ""
+        echo "To transfer results to your host machine:"
+        echo "  ~/go/bin/croc send $RESULT_ARCHIVE"
+        echo ""
+        success "Benchmarks completed successfully!"
+    else
+        warn "Failed to create results archive"
+    fi
+}
+
+# ============================================================================
+# PHASE 9: FINAL SUMMARY
+# ============================================================================
+
+phase9_summary() {
     cd "$PROJECT_DIR"
 
     echo ""
@@ -457,25 +548,31 @@ phase8_verify() {
     echo "  [✓] Termux packages installed"
     echo "  [✓] SSH configured"
     echo "  [✓] croc file transfer tool installed"
-    echo "  [✓] OpenCL GPU configured"
+    echo "  [✓] OpenCL GPU verified"
     echo "  [✓] Repository cloned"
     echo "  [✓] Python environment ready"
-    echo "  [✓] Ready for benchmarking"
+    echo "  [✓] Models downloaded"
+    if [ "$RUN_BENCHMARK" = true ]; then
+        echo "  [✓] Benchmarks completed"
+    fi
     echo ""
 
-    info "Next steps:"
-    echo "  1. Run performance benchmarks:"
-    echo "     cd ~/t-eai-project"
-    echo "     PYTHONPATH=./deps/tinygrad python3 tinygrad_benchmark.py"
-    echo ""
-    echo "  2. Or run full benchmark suite with wrapper:"
-    echo "     ./pixel_benchmark_wrapper.sh"
-    echo ""
-    echo "  3. Transfer results to host:"
-    echo "     croc send benchmark_output/"
+    if [ "$RUN_BENCHMARK" != true ]; then
+        info "To run benchmarks:"
+        echo "  cd ~/t-eai-project"
+        echo "  ./setup/termux.sh --benchmark"
+        echo ""
+        info "Or manually:"
+        echo "  cd ~/t-eai-project"
+        echo "  LD_LIBRARY_PATH=/system/vendor/lib64 GPU=1 OPENCL=1 PYTHONPATH=./deps/tinygrad python3 tinygrad_benchmark.py"
+        echo ""
+    fi
+
+    info "To transfer results:"
+    echo "  ~/go/bin/croc send benchmark_output/"
     echo ""
 
-    success "Setup script completed successfully!"
+    success "All done!"
 }
 
 # ============================================================================
@@ -491,7 +588,8 @@ main() {
     phase5_clone
     phase6_python
     phase7_models
-    phase8_verify
+    phase8_benchmark
+    phase9_summary
 }
 
 # Run main function
