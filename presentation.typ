@@ -698,18 +698,24 @@
 ]
 
 #slide[
-  = Results: Speedup Analysis
+  #figure(
+    [
+      #text(size: 24pt, fill: mocha-mauve, weight: "bold")[Results: Speedup Analysis]
 
-  #align(center)[
-    #image("docs/images/speedup_comparison.png", width: 75%)
-  ]
+      #v(0.5em)
 
-  #text(size: 15pt)[
-  *Observations*:
-  - llama.cpp shows 16.6x speedup over tinygrad for NF4
-  - tinygrad leads by 8.0x for float16 workloads
-  - INT8 and default show modest llama.cpp advantage (1.2-2.5x)
-  ]
+      #image("docs/images/speedup_comparison.png", width: 85%)
+
+      #v(0.3em)
+
+      #text(size: 15pt)[
+      *Observations*:
+      - llama.cpp shows 16.6x speedup over tinygrad for NF4
+      - tinygrad leads by 8.0x for float16 workloads
+      - INT8 and default show modest llama.cpp advantage (1.2-2.5x)
+      ]
+    ]
+  )
 ]
 
 #slide[
