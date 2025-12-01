@@ -399,9 +399,23 @@ phase6_build_llama() {
 
     cd "$PROJECT_DIR/deps/llama.cpp"
 
-    # Clean previous build if exists
+    # Check if binaries already exist (cache check)
+    if [ -f "build/bin/llama-server" ] && [ -f "build/bin/llama-bench" ]; then
+        info "llama.cpp binaries already exist"
+
+        # Verify they work
+        if ./build/bin/llama-server --version 2>/dev/null; then
+            success "Existing llama.cpp build verified and working"
+            create_marker "$MARKER"
+            return 0
+        else
+            warn "Existing binaries found but not working, will rebuild"
+        fi
+    fi
+
+    # Clean previous build if exists but broken
     if [ -d "build" ]; then
-        warn "Previous build directory exists"
+        warn "Previous build directory exists but binaries missing/broken"
         prompt "Clean and rebuild? (y/n): "
         read -n 1 -r
         echo
@@ -461,11 +475,18 @@ phase7_python() {
 
     # Install dependencies
     info "Installing Python dependencies..."
-    if [ -f "requirements.txt" ]; then
-        python3 -m pip install --user -r requirements.txt || error "Failed to install dependencies"
+
+    # Check if packages are already installed (cache check)
+    if python3 -c "import bottle; import tiktoken; import verifiers" 2>/dev/null; then
+        info "Required Python packages already installed"
     else
-        warn "requirements.txt not found, installing packages individually..."
-        python3 -m pip install --user bottle tiktoken verifiers || error "Failed to install dependencies"
+        info "Installing missing Python packages..."
+        if [ -f "requirements.txt" ]; then
+            python3 -m pip install --user -r requirements.txt || error "Failed to install dependencies"
+        else
+            warn "requirements.txt not found, installing packages individually..."
+            python3 -m pip install --user bottle tiktoken verifiers || error "Failed to install dependencies"
+        fi
     fi
 
     # Add tinygrad to PYTHONPATH
@@ -485,13 +506,20 @@ phase7_python() {
 
     # Install verifiers environment for wordle
     info "Installing verifiers wordle environment..."
-    cd "$PROJECT_DIR/deps/verifiers"
-    if python3 -m verifiers.scripts.install wordle --from-repo; then
-        success "Wordle environment installed"
+
+    # Check if wordle environment is already installed (cache check)
+    if [ -d "$PROJECT_DIR/environments/wordle" ] && python3 -c "from verifiers.envs.wordle import Wordle" 2>/dev/null; then
+        info "Wordle environment already installed"
     else
-        warn "Failed to install wordle environment (you can install it later with: python3 -m verifiers.scripts.install wordle --from-repo)"
+        info "Installing wordle environment from repo..."
+        cd "$PROJECT_DIR/deps/verifiers"
+        if python3 -m verifiers.scripts.install wordle --from-repo; then
+            success "Wordle environment installed"
+        else
+            warn "Failed to install wordle environment (you can install it later with: python3 -m verifiers.scripts.install wordle --from-repo)"
+        fi
+        cd "$PROJECT_DIR"
     fi
-    cd "$PROJECT_DIR"
 
     create_marker "$MARKER"
     success "Phase 7 complete: Python environment ready"
@@ -527,12 +555,18 @@ phase8_models() {
     echo "  Total for all quantizations: ~6GB"
     echo ""
 
-    prompt "Download a test model now? (y/n): "
-    read -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        info "Downloading nf4 (Q4_K_M) quantization for testing..."
-        python3 << 'PYEOF'
+    # Check if any models already exist (cache check)
+    if ls models/*.gguf 1> /dev/null 2>&1; then
+        info "Found existing model files:"
+        ls -lh models/*.gguf | awk '{print "  - " $9 " (" $5 ")"}'
+        success "Models already downloaded, skipping download step"
+    else
+        prompt "Download a test model now? (y/n): "
+        read -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            info "Downloading nf4 (Q4_K_M) quantization for testing..."
+            python3 << 'PYEOF'
 from tinygrad.helpers import fetch
 from defaults import MODEL_CONFIGS
 import pathlib
@@ -547,9 +581,10 @@ if not model_path.exists():
 else:
     print("Model already exists")
 PYEOF
-        success "Test model downloaded"
-    else
-        info "Models will be downloaded during first benchmark run"
+            success "Test model downloaded"
+        else
+            info "Models will be downloaded during first benchmark run"
+        fi
     fi
 
     create_marker "$MARKER"
