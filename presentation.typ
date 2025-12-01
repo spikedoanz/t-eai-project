@@ -9,16 +9,12 @@
 
 #let footer-text = [Doan & Dinh | CSC 4228/6228 | Fall 2024]
 
-#set page(
-  footer: align(center, footer-text),
-  footer-descent: 1em,
-)
-
 // ============================================================================
 // TITLE SLIDE
 // ============================================================================
 
 #slide[
+  #set page(footer: align(center, footer-text), footer-descent: 1em)
   #align(center + horizon)[
     #text(size: 36pt, weight: "bold")[Comparing Quantization Across Hardware]
 
@@ -243,83 +239,67 @@
 #slide[
   = Benchmark Workflow
 
-  #text(size: 13pt)[
-  // Row 1: Pixel Setup & Model Prep
-  #grid(
-    columns: (1fr, auto, 1fr, auto, 1fr),
-    gutter: 0.4em,
-    [
-      #rect(fill: rgb("#ede7f6"), inset: 0.5em, height: 100%)[
-        *0. Pixel Setup*
-
-        Termux + SSH + OpenCL
-
-        `croc`, `cmake`, `clang`
-      ]
-    ],
-    [→],
-    [
-      #rect(fill: rgb("#e3f2fd"), inset: 0.5em, height: 100%)[
-        *1. Model Prep*
-
-        Download models
-
-        Quantize (GGUF/HF)
-      ]
-    ],
-    [→],
-    [
-      #rect(fill: rgb("#fff3e0"), inset: 0.5em, height: 100%)[
-        *2. Run Benchmarks*
-
-        Execute on devices
-
-        Output: `.txt` logs
-      ]
-    ],
-  )
-
-  #v(0.5em)
-
-  // Row 2: Presentation (leftmost) and remaining workflow (snake back)
-  #grid(
-    columns: (1fr, auto, 1fr, auto, 1fr),
-    gutter: 0.4em,
-    [
-      #rect(fill: rgb("#c8e6c9"), inset: 0.5em, height: 100%)[
-        *5. Presentation*
-
-        Embed plots
-
-        `typst compile`
-      ]
-    ],
-    [←],
-    [
-      #rect(fill: rgb("#e8f5e9"), inset: 0.5em, height: 100%)[
-        *4. Visualize*
-
-        Generate plots
-
-        `.png` files
-      ]
-    ],
-    [←],
-    [
-      #rect(fill: rgb("#fce4ec"), inset: 0.5em, height: 100%)[
-        *3. Collate*
-
-        Parse logs
-
-        Structured CSV
-      ]
-    ],
-  )
-  ]
-
-  #v(0.3em)
-  #text(size: 12pt)[
-    Flow: Pixel setup → Model prep → Benchmarks → Collation → Visualization → Presentation
+  #align(center)[
+    #box(width: 95%)[
+      #grid(
+        columns: (1fr, 1fr, 1fr),
+        gutter: 0.8em,
+        [
+          #rect(fill: rgb("#ede7f6"), inset: 0.8em, width: 100%)[
+            #text(size: 14pt)[
+              *0. Pixel Setup* \
+              Termux + SSH + OpenCL \
+              `croc`, `cmake`
+            ]
+          ]
+        ],
+        [
+          #rect(fill: rgb("#e3f2fd"), inset: 0.8em, width: 100%)[
+            #text(size: 14pt)[
+              *1. Model Prep* \
+              Download models \
+              Quantize (GGUF/HF)
+            ]
+          ]
+        ],
+        [
+          #rect(fill: rgb("#fff3e0"), inset: 0.8em, width: 100%)[
+            #text(size: 14pt)[
+              *2. Run Benchmarks* \
+              Execute on devices \
+              Output: `.txt` logs
+            ]
+          ]
+        ],
+        [
+          #rect(fill: rgb("#fce4ec"), inset: 0.8em, width: 100%)[
+            #text(size: 14pt)[
+              *3. Collate* \
+              Parse logs \
+              Structured CSV
+            ]
+          ]
+        ],
+        [
+          #rect(fill: rgb("#e8f5e9"), inset: 0.8em, width: 100%)[
+            #text(size: 14pt)[
+              *4. Visualize* \
+              Generate plots \
+              `.png` files
+            ]
+          ]
+        ],
+        [
+          #rect(fill: rgb("#c8e6c9"), inset: 0.8em, width: 100%)[
+            #text(size: 14pt)[
+              *5. Presentation* \
+              Embed plots \
+              `typst compile`
+            ]
+          ]
+        ],
+      )
+    ]
   ]
 ]
 
@@ -803,6 +783,7 @@
 ]
 
 #slide[
+  #set page(footer: align(center, footer-text), footer-descent: 1em)
   #align(center + horizon)[
     #text(size: 36pt, weight: "bold")[Thank You!]
 
