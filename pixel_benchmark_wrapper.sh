@@ -1,20 +1,17 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # Pixel 7/8 Benchmark Wrapper Script
-# Runs complete llama.cpp benchmark suite and packages results for transfer
+# Runs tinygrad performance benchmarks and packages results for transfer
 #
 # This script performs:
-#   1. Performance benchmarks across all quantizations
-#   2. Accuracy evaluation using verifiers (GSM8K)
-#   3. Result collation into CSV format
-#   4. Packaging results for transfer to host
+#   1. Performance benchmarks across all quantizations (default, int8, nf4, float16)
+#   2. Result collation into CSV format
+#   3. Packaging results for transfer to host
 #
 # Usage:
 #   cd ~/t-eai-project
 #   ./pixel_benchmark_wrapper.sh
 #
 # Options:
-#   --quick          Run with fewer examples (5 instead of 20)
-#   --no-accuracy    Skip accuracy evaluation, only run performance benchmarks
 #   --help           Show this help message
 
 set -e  # Exit on error
@@ -24,26 +21,14 @@ set -e  # Exit on error
 # ============================================================================
 
 PROJECT_DIR="$HOME/t-eai-project"
-NUM_EXAMPLES=20
-RUN_ACCURACY=true
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --quick)
-            NUM_EXAMPLES=5
-            shift
-            ;;
-        --no-accuracy)
-            RUN_ACCURACY=false
-            shift
-            ;;
         --help)
             echo "Usage: $0 [OPTIONS]"
             echo ""
             echo "Options:"
-            echo "  --quick          Run with fewer examples (5 instead of 20)"
-            echo "  --no-accuracy    Skip accuracy evaluation"
             echo "  --help           Show this help message"
             exit 0
             ;;
@@ -64,13 +49,17 @@ export LD_LIBRARY_PATH=/system/vendor/lib64:$LD_LIBRARY_PATH
 export PYOPENCL_CTX=0
 export PYOPENCL_PLATFORM=0
 
+# Tinygrad GPU configuration
+export GPU=1
+export OPENCL=1
+
 # Export PYTHONPATH for tinygrad
 export PYTHONPATH="$PROJECT_DIR/deps/tinygrad:$PYTHONPATH"
 
 # Change to project directory
 cd "$PROJECT_DIR" || {
     echo "ERROR: Project directory not found: $PROJECT_DIR"
-    echo "Have you run setup/pixel7_setup.sh?"
+    echo "Have you run setup/termux.sh?"
     exit 1
 }
 
@@ -98,11 +87,6 @@ warn() {
 check_dependencies() {
     info "Checking dependencies..."
 
-    # Check llama.cpp binaries
-    if [ ! -f "deps/llama.cpp/build/bin/llama-bench" ]; then
-        error "llama-bench not found. Run setup/pixel7_setup.sh first"
-    fi
-
     # Check Python
     if ! command -v python3 &> /dev/null; then
         error "python3 not found"
@@ -110,7 +94,7 @@ check_dependencies() {
 
     # Check Python packages
     python3 -c "import bottle; import tiktoken; from tinygrad.helpers import fetch" 2>/dev/null \
-        || error "Required Python packages not installed. Run: pip3 install -r requirements.txt"
+        || error "Required Python packages not installed. Run: pip3 install bottle tiktoken"
 
     success "All dependencies found"
 }
@@ -122,15 +106,12 @@ check_dependencies() {
 echo ""
 echo "=========================================="
 echo "  Pixel Benchmark Suite"
-echo "  llama.cpp backend"
+echo "  tinygrad backend"
 echo "=========================================="
 echo ""
 echo "Configuration:"
 echo "  Project: $PROJECT_DIR"
-echo "  Accuracy evaluation: $RUN_ACCURACY"
-if [ "$RUN_ACCURACY" = true ]; then
-    echo "  GSM8K examples: $NUM_EXAMPLES"
-fi
+echo "  Quantizations: default, int8, nf4, float16"
 echo ""
 
 check_dependencies
@@ -141,58 +122,34 @@ START_TIME=$(date +%s)
 # STEP 1: PERFORMANCE BENCHMARKS
 # ============================================================================
 
-info "[1/$([ "$RUN_ACCURACY" = true ] && echo "4" || echo "3")] Running performance benchmarks..."
+info "[1/3] Running performance benchmarks..."
 echo "This will test all quantization methods: default, int8, nf4, float16"
 echo "Expected time: 5-10 minutes"
 echo ""
 
-if python3 llamacpp_benchmark.py; then
+if python3 tinygrad_benchmark.py; then
     success "Performance benchmarks completed"
 else
     error "Performance benchmarks failed"
 fi
 
 # ============================================================================
-# STEP 2: ACCURACY EVALUATION (OPTIONAL)
+# STEP 2: COLLATE RESULTS
 # ============================================================================
 
-if [ "$RUN_ACCURACY" = true ]; then
-    info "[2/4] Running accuracy evaluation (wordle, $NUM_EXAMPLES examples)..."
-    echo "This evaluates model accuracy on word-guessing tasks"
-    echo "Expected time: $(($NUM_EXAMPLES * 1))-$(($NUM_EXAMPLES * 2)) minutes"
-    echo ""
+info "[2/3] Collating results into CSV..."
 
-    if python3 llamacpp_sweep.py --env wordle --num-examples $NUM_EXAMPLES --size 1B; then
-        success "Accuracy evaluation completed"
-    else
-        warn "Accuracy evaluation failed (continuing with result packaging)"
-    fi
-else
-    info "Skipping accuracy evaluation (--no-accuracy flag set)"
-fi
-
-# ============================================================================
-# STEP 3: COLLATE RESULTS
-# ============================================================================
-
-COLLATE_STEP=$([ "$RUN_ACCURACY" = true ] && echo "3" || echo "2")
-TOTAL_STEPS=$([ "$RUN_ACCURACY" = true ] && echo "4" || echo "3")
-
-info "[$COLLATE_STEP/$TOTAL_STEPS] Collating results into CSV..."
-
-if python3 llamacpp_collate.py; then
+if python3 tinygrad_collate.py 2>/dev/null || python3 llamacpp_collate.py 2>/dev/null; then
     success "Results collated"
 else
-    warn "Collation failed (raw results still available in benchmark_output/)"
+    warn "Collation script not found (raw results still available in benchmark_output/)"
 fi
 
 # ============================================================================
-# STEP 4: PACKAGE RESULTS
+# STEP 3: PACKAGE RESULTS
 # ============================================================================
 
-PACKAGE_STEP=$([ "$RUN_ACCURACY" = true ] && echo "4" || echo "3")
-
-info "[$PACKAGE_STEP/$TOTAL_STEPS] Packaging results..."
+info "[3/3] Packaging results..."
 
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 HOSTNAME=$(hostname)
@@ -201,8 +158,7 @@ RESULT_ARCHIVE="pixel_results_${HOSTNAME}_${TIMESTAMP}.tar.gz"
 # Create archive with all results
 tar -czf "$RESULT_ARCHIVE" \
     benchmark_output/*.txt \
-    benchmark_output/llamacpp.csv \
-    $([ "$RUN_ACCURACY" = true ] && echo "verifiers_results/*.json" || echo "") \
+    benchmark_output/*.csv \
     2>/dev/null || warn "Some result files may be missing from archive"
 
 if [ -f "$RESULT_ARCHIVE" ]; then
@@ -241,12 +197,6 @@ echo "     scp -P 8022 \$(whoami)@<pixel-ip>:~/t-eai-project/$RESULT_ARCHIVE ."
 echo ""
 echo "Raw results also available in:"
 echo "  - benchmark_output/*.txt (raw logs)"
-echo "  - benchmark_output/llamacpp.csv (collated performance data)"
-if [ "$RUN_ACCURACY" = true ]; then
-    echo "  - verifiers_results/*.json (accuracy evaluation)"
-fi
-echo ""
-echo "To view results summary:"
-echo "  python3 visualize_benchmarks.py"
+echo "  - benchmark_output/*.csv (collated performance data)"
 echo ""
 success "All tasks completed successfully!"

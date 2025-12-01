@@ -392,16 +392,11 @@ phase6_python() {
     info "Installing Python dependencies..."
 
     # Check if packages are already installed (cache check)
-    if python3 -c "import bottle; import tiktoken; import verifiers" 2>/dev/null; then
+    if python3 -c "import bottle; import tiktoken" 2>/dev/null; then
         info "Required Python packages already installed"
     else
         info "Installing missing Python packages..."
-        if [ -f "requirements.txt" ]; then
-            python3 -m pip install --user -r requirements.txt || error "Failed to install dependencies"
-        else
-            warn "requirements.txt not found, installing packages individually..."
-            python3 -m pip install --user bottle tiktoken verifiers || error "Failed to install dependencies"
-        fi
+        python3 -m pip install --user bottle tiktoken || error "Failed to install dependencies"
     fi
 
     # Add tinygrad to PYTHONPATH
@@ -418,23 +413,6 @@ phase6_python() {
     info "Verifying Python imports..."
     python3 -c "import bottle; import tiktoken; from tinygrad.helpers import fetch" \
         || error "Python import verification failed"
-
-    # Install verifiers environment for wordle
-    info "Installing verifiers wordle environment..."
-
-    # Check if wordle environment is already installed (cache check)
-    if [ -d "$PROJECT_DIR/environments/wordle" ] && python3 -c "from verifiers.envs.wordle import Wordle" 2>/dev/null; then
-        info "Wordle environment already installed"
-    else
-        info "Installing wordle environment from repo..."
-        cd "$PROJECT_DIR/deps/verifiers"
-        if python3 -m verifiers.scripts.install wordle --from-repo; then
-            success "Wordle environment installed"
-        else
-            warn "Failed to install wordle environment (you can install it later with: python3 -m verifiers.scripts.install wordle --from-repo)"
-        fi
-        cd "$PROJECT_DIR"
-    fi
 
     create_marker "$MARKER"
     success "Phase 6 complete: Python environment ready"
@@ -454,35 +432,38 @@ phase7_models() {
 
     cd "$PROJECT_DIR"
 
-    # Create models directory
-    mkdir -p models
+    # Tinygrad auto-downloads models to its cache directory
+    TINYGRAD_CACHE="$HOME/.cache/tinygrad/downloads"
+    LLAMA_1B_DIR="$TINYGRAD_CACHE/llama3-1b-instruct"
 
     info "Model information:"
-    echo "  Models are downloaded on-demand during benchmarking"
-    echo "  Location: $PROJECT_DIR/models/"
+    echo "  Tinygrad automatically downloads models on first run"
+    echo "  Cache location: $TINYGRAD_CACHE"
     echo ""
-    echo "  Available quantizations (Llama-3.2-1B-Instruct):"
-    echo "    - default (Q6_K):  ~1.2GB"
-    echo "    - int8 (Q8_0):     ~1.5GB"
-    echo "    - nf4 (Q4_K_M):    ~800MB"
-    echo "    - float16 (f16):   ~2.5GB"
+    echo "  For 1B model (Llama-3.2-1B-Instruct):"
+    echo "    - Base model (Q6_K GGUF): ~1.2GB"
+    echo "    - Tokenizer: ~2MB"
     echo ""
-    echo "  Total for all quantizations: ~6GB"
+    echo "  Quantization is applied at runtime by tinygrad:"
+    echo "    - default: Q6_K (from GGUF file)"
+    echo "    - int8: converted at load time"
+    echo "    - nf4: converted at load time"
+    echo "    - float16: converted at load time"
     echo ""
 
-    # Check if any models already exist (cache check)
-    if ls models/*.gguf 1> /dev/null 2>&1; then
-        info "Found existing model files:"
-        ls -lh models/*.gguf | awk '{print "  - " $9 " (" $5 ")"}'
-        success "Models already downloaded, skipping download step"
+    # Check if model already exists in tinygrad cache
+    if [ -f "$LLAMA_1B_DIR/Llama-3.2-1B-Instruct-Q6_K.gguf" ]; then
+        info "Found existing model in tinygrad cache:"
+        ls -lh "$LLAMA_1B_DIR/" | awk '{print "  - " $9 " (" $5 ")"}'
+        success "Model already downloaded"
     else
-        info "No models found. Models will be downloaded automatically during first benchmark run"
-        info "Or download manually now with:"
-        echo "  python3 << 'EOF'"
-        echo "  from tinygrad.helpers import fetch"
-        echo "  from defaults import MODEL_CONFIGS"
-        echo "  fetch(MODEL_CONFIGS['nf4']['url'], name='./models/Llama-3.2-1B-Instruct-Q4_K_M.gguf')"
-        echo "  EOF"
+        info "No model found in cache. Model will be downloaded automatically during first benchmark run"
+        info "Or pre-download now with:"
+        echo "  cd $PROJECT_DIR"
+        echo "  PYTHONPATH=./deps/tinygrad python3 -c \\"
+        echo "    'from tinygrad.helpers import fetch; \\"
+        echo "     fetch(\"https://huggingface.co/bofenghuang/Meta-Llama-3-8B/resolve/main/original/tokenizer.model\", \"tokenizer.model\", subdir=\"llama3-1b-instruct\"); \\"
+        echo "     fetch(\"https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q6_K.gguf\", \"Llama-3.2-1B-Instruct-Q6_K.gguf\", subdir=\"llama3-1b-instruct\")'"
     fi
 
     create_marker "$MARKER"
@@ -518,17 +499,14 @@ phase8_verify() {
     echo "  1. Reload shell environment:"
     echo "     source ~/.bashrc"
     echo ""
-    echo "  2. Review benchmark documentation:"
-    echo "     cat setup/PIXEL-BENCHMARK.md"
-    echo ""
-    echo "  3. Run benchmarks:"
+    echo "  2. Run performance benchmarks:"
     echo "     cd ~/t-eai-project"
     echo "     python3 tinygrad_benchmark.py"
     echo ""
-    echo "  4. Or run full benchmark suite:"
-    echo "     python3 tinygrad_sweep.py --env wordle --num-examples 20"
+    echo "  3. Or run full benchmark suite with wrapper:"
+    echo "     ./pixel_benchmark_wrapper.sh"
     echo ""
-    echo "  5. Transfer results to host:"
+    echo "  4. Transfer results to host:"
     echo "     croc send benchmark_output/"
     echo ""
 
