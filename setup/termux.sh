@@ -305,35 +305,13 @@ phase4_opencl() {
         warn "/system/vendor/lib64 not found. GPU acceleration may not work"
     fi
 
-    # Add environment variables to .bashrc
-    info "Adding OpenCL environment variables to ~/.bashrc..."
-
-    if ! grep -q "LD_LIBRARY_PATH.*vendor/lib64" ~/.bashrc; then
-        cat >> ~/.bashrc << 'EOF'
-
-# OpenCL GPU configuration for Adreno
-export LD_LIBRARY_PATH=/system/vendor/lib64:$LD_LIBRARY_PATH
-export PYOPENCL_CTX=0
-export PYOPENCL_PLATFORM=0
-
-# Tinygrad GPU configuration
-export GPU=1
-export OPENCL=1
-EOF
-        success "OpenCL environment variables added to ~/.bashrc"
-    else
-        info "OpenCL environment variables already in ~/.bashrc"
-    fi
-
-    # Export for current session
-    export LD_LIBRARY_PATH=/system/vendor/lib64:$LD_LIBRARY_PATH
-    export PYOPENCL_CTX=0
-    export PYOPENCL_PLATFORM=0
-    export GPU=1
-    export OPENCL=1
+    info "OpenCL environment variables will be set by benchmark wrapper script"
+    echo "  Required environment variables:"
+    echo "    LD_LIBRARY_PATH=/system/vendor/lib64:\$LD_LIBRARY_PATH"
+    echo "    GPU=1 OPENCL=1"
 
     create_marker "$MARKER"
-    success "Phase 4 complete: OpenCL configured"
+    success "Phase 4 complete: OpenCL verified"
 }
 
 # ============================================================================
@@ -399,19 +377,9 @@ phase6_python() {
         python3 -m pip install --user bottle tiktoken || error "Failed to install dependencies"
     fi
 
-    # Add tinygrad to PYTHONPATH
-    info "Configuring PYTHONPATH for tinygrad..."
-    if ! grep -q "PYTHONPATH.*tinygrad" ~/.bashrc; then
-        echo "export PYTHONPATH=\"$PROJECT_DIR/deps/tinygrad:\$PYTHONPATH\"" >> ~/.bashrc
-        success "Added tinygrad to PYTHONPATH in ~/.bashrc"
-    else
-        info "tinygrad already in PYTHONPATH"
-    fi
-    export PYTHONPATH="$PROJECT_DIR/deps/tinygrad:$PYTHONPATH"
-
-    # Verify imports
+    # Verify imports (with PYTHONPATH set for tinygrad)
     info "Verifying Python imports..."
-    python3 -c "import bottle; import tiktoken; from tinygrad.helpers import fetch" \
+    PYTHONPATH="$PROJECT_DIR/deps/tinygrad" python3 -c "import bottle; import tiktoken; from tinygrad.helpers import fetch" \
         || error "Python import verification failed"
 
     create_marker "$MARKER"
@@ -496,26 +464,18 @@ phase8_verify() {
     echo ""
 
     info "Next steps:"
-    echo "  1. Reload shell environment:"
-    echo "     source ~/.bashrc"
-    echo ""
-    echo "  2. Run performance benchmarks:"
+    echo "  1. Run performance benchmarks:"
     echo "     cd ~/t-eai-project"
-    echo "     python3 tinygrad_benchmark.py"
+    echo "     PYTHONPATH=./deps/tinygrad python3 tinygrad_benchmark.py"
     echo ""
-    echo "  3. Or run full benchmark suite with wrapper:"
+    echo "  2. Or run full benchmark suite with wrapper:"
     echo "     ./pixel_benchmark_wrapper.sh"
     echo ""
-    echo "  4. Transfer results to host:"
+    echo "  3. Transfer results to host:"
     echo "     croc send benchmark_output/"
     echo ""
 
     success "Setup script completed successfully!"
-
-    info "To apply environment changes, reload your shell with:"
-    echo "  source ~/.bashrc"
-    echo ""
-    echo "Or start a new shell session"
 }
 
 # ============================================================================
