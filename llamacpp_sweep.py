@@ -55,7 +55,7 @@ def get_model_path(quantize: str, size: str = "1B") -> Path:
     return model_path
 
 
-def run_benchmark(env: str, num_examples: int, max_tokens: int, port: int = None) -> dict:
+def run_benchmark(env: str, num_examples: int, max_tokens: int, port: int = None, max_concurrent: int = 1) -> dict:
     """Run vf-eval and capture results."""
     if port is None:
         port = BACKEND_PORT
@@ -66,6 +66,7 @@ def run_benchmark(env: str, num_examples: int, max_tokens: int, port: int = None
         "-n", str(num_examples),
         "-r", "1",
         "-t", str(max_tokens),
+        "-c", str(max_concurrent),  # Max concurrent requests
         "--save-results",  # Persist runs to database for vf-tui
     ]
 
@@ -77,7 +78,7 @@ def run_benchmark(env: str, num_examples: int, max_tokens: int, port: int = None
         capture_output=True,
         text=True,
         env=env_vars,
-        timeout=7200  # 2 hours for large benchmark runs
+        timeout=None  # No timeout - let it run as long as needed
     )
 
     return {
@@ -118,7 +119,7 @@ def parse_results(output: str) -> dict:
     return metrics
 
 
-def run_sweep(env: str, num_examples: int, max_tokens: int, size: str, port: int = None):
+def run_sweep(env: str, num_examples: int, max_tokens: int, size: str, port: int = None, max_concurrent: int = 1):
     """Run benchmark sweep across all quantization options."""
     if port is None:
         port = BACKEND_PORT
@@ -160,9 +161,9 @@ def run_sweep(env: str, num_examples: int, max_tokens: int, size: str, port: int
             print("Server ready!")
 
             # Run benchmark (direct connection, no proxy needed)
-            print(f"Running {env} benchmark with {num_examples} examples...")
+            print(f"Running {env} benchmark with {num_examples} examples (max_concurrent={max_concurrent})...")
             start_time = time.time()
-            bench_result = run_benchmark(env, num_examples, max_tokens, port)
+            bench_result = run_benchmark(env, num_examples, max_tokens, port, max_concurrent)
             elapsed = time.time() - start_time
 
             # Parse results
@@ -179,12 +180,21 @@ def run_sweep(env: str, num_examples: int, max_tokens: int, size: str, port: int
                 "returncode": bench_result["returncode"],
                 "timestamp": datetime.now().isoformat(),
                 "backend": "llamacpp",
+                "stdout": bench_result["stdout"][-1000:] if bench_result["stdout"] else "",  # Last 1000 chars
+                "stderr": bench_result["stderr"][-1000:] if bench_result["stderr"] else "",  # Last 1000 chars
             }
             results.append(result_entry)
 
             # Print summary
             print(f"\nResults for {quant}:")
             print(f"  Time: {elapsed:.1f}s")
+            print(f"  Return code: {bench_result['returncode']}")
+
+            if bench_result['returncode'] != 0:
+                print(f"  ERROR: vf-eval failed!")
+                if bench_result['stderr']:
+                    print(f"  Last stderr output:\n{bench_result['stderr'][-500:]}")
+
             for name, vals in metrics.items():
                 if isinstance(vals, dict):
                     print(f"  {name}: avg={vals['avg']:.3f}, std={vals['std']:.3f}")
@@ -239,6 +249,7 @@ if __name__ == "__main__":
     parser.add_argument("--size", default="1B", choices=["1B", "8B", "70B", "405B"], help="Model size")
     parser.add_argument("--quant", choices=QUANT_OPTIONS, help="Run single quantization instead of full sweep")
     parser.add_argument("--port", type=int, default=8080, help="Port for llama-server")
+    parser.add_argument("--max-concurrent", "-c", type=int, default=1, help="Maximum concurrent requests to backend")
     args = parser.parse_args()
 
     try:
@@ -249,13 +260,13 @@ if __name__ == "__main__":
             QUANT_OPTIONS.clear()
             QUANT_OPTIONS.append(args.quant)
 
-            run_sweep(args.env, args.num_examples, args.max_tokens, args.size, args.port)
+            run_sweep(args.env, args.num_examples, args.max_tokens, args.size, args.port, args.max_concurrent)
 
             # Restore original
             QUANT_OPTIONS.clear()
             QUANT_OPTIONS.extend(original_quant_options)
         else:
-            run_sweep(args.env, args.num_examples, args.max_tokens, args.size, args.port)
+            run_sweep(args.env, args.num_examples, args.max_tokens, args.size, args.port, args.max_concurrent)
     except KeyboardInterrupt:
         print("\nSweep interrupted by user")
         sys.exit(1)
