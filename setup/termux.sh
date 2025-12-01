@@ -137,15 +137,10 @@ phase0_preflight() {
     echo "  7. Setup Python environment"
     echo "  8. Prepare for model downloads"
     echo ""
-    echo "Estimated time: 30-60 minutes"
+    echo "Estimated time: 30-60 minutes (or seconds if cached)"
     echo "Required storage: ${REQUIRED_STORAGE_GB}GB"
     echo ""
-
-    read -p "Continue? (y/n): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        error "Setup cancelled by user"
-    fi
+    info "Starting automated setup..."
 }
 
 # ============================================================================
@@ -229,28 +224,23 @@ phase2_ssh() {
     info "SSH Username: $USERNAME"
 
     echo ""
-    prompt "Do you want to setup Tailscale for easier remote access? (y/n): "
-    read -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        info "Tailscale setup instructions:"
-        echo "  1. Install Tailscale from Google Play Store on your Pixel"
-        echo "  2. Sign in and add device to your tailnet"
-        echo "  3. On your host machine, run: tailscale status"
-        echo "  4. Find your Pixel's tailscale IP"
-        echo "  5. Connect via: ssh $USERNAME@<tailscale-ip> -p 8022"
-        echo ""
-        prompt "Press Enter once Tailscale is installed..."
-        read
+    info "SSH connection information:"
+    echo "  Username: $USERNAME"
+    echo ""
+    info "Option 1: Tailscale (recommended)"
+    echo "  1. Install Tailscale from Google Play Store on your Pixel"
+    echo "  2. Sign in and add device to your tailnet"
+    echo "  3. On your host machine, run: tailscale status"
+    echo "  4. Find your Pixel's tailscale IP"
+    echo "  5. Connect via: ssh $USERNAME@<tailscale-ip> -p 8022"
+    echo ""
+    info "Option 2: Local network"
+    LOCAL_IP=$(ifconfig wlan0 2>/dev/null | grep 'inet ' | awk '{print $2}')
+    if [ -n "$LOCAL_IP" ]; then
+        echo "  Connect via: ssh $USERNAME@$LOCAL_IP -p 8022"
     else
-        info "Local network SSH access:"
-        LOCAL_IP=$(ifconfig wlan0 2>/dev/null | grep 'inet ' | awk '{print $2}')
-        if [ -n "$LOCAL_IP" ]; then
-            echo "  Connect via: ssh $USERNAME@$LOCAL_IP -p 8022"
-        else
-            echo "  Run 'ifconfig wlan0' to find your IP address"
-            echo "  Then connect via: ssh $USERNAME@<ip-address> -p 8022"
-        fi
+        echo "  Run 'ifconfig wlan0' to find your IP address"
+        echo "  Then connect via: ssh $USERNAME@<ip-address> -p 8022"
     fi
 
     create_marker "$MARKER"
@@ -357,18 +347,11 @@ phase5_clone() {
     info "PHASE 5: Cloning t-eai-project repository..."
 
     if [ -d "$PROJECT_DIR" ]; then
-        warn "Project directory already exists: $PROJECT_DIR"
-        prompt "Remove and re-clone? (y/n): "
-        read -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            rm -rf "$PROJECT_DIR"
-        else
-            info "Using existing project directory"
-            cd "$PROJECT_DIR"
-            create_marker "$MARKER"
-            return 0
-        fi
+        info "Project directory already exists: $PROJECT_DIR"
+        info "Using existing project directory"
+        cd "$PROJECT_DIR"
+        create_marker "$MARKER"
+        return 0
     fi
 
     info "Cloning repository..."
@@ -415,13 +398,8 @@ phase6_build_llama() {
 
     # Clean previous build if exists but broken
     if [ -d "build" ]; then
-        warn "Previous build directory exists but binaries missing/broken"
-        prompt "Clean and rebuild? (y/n): "
-        read -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            rm -rf build
-        fi
+        warn "Previous build directory exists but binaries missing/broken - cleaning"
+        rm -rf build
     fi
 
     mkdir -p build
@@ -561,30 +539,13 @@ phase8_models() {
         ls -lh models/*.gguf | awk '{print "  - " $9 " (" $5 ")"}'
         success "Models already downloaded, skipping download step"
     else
-        prompt "Download a test model now? (y/n): "
-        read -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            info "Downloading nf4 (Q4_K_M) quantization for testing..."
-            python3 << 'PYEOF'
-from tinygrad.helpers import fetch
-from defaults import MODEL_CONFIGS
-import pathlib
-
-model_config = MODEL_CONFIGS["nf4"]
-model_path = pathlib.Path("./models/Llama-3.2-1B-Instruct-Q4_K_M.gguf")
-
-if not model_path.exists():
-    print(f"Downloading to {model_path}...")
-    fetch(model_config["url"], name=model_path)
-    print("Download complete!")
-else:
-    print("Model already exists")
-PYEOF
-            success "Test model downloaded"
-        else
-            info "Models will be downloaded during first benchmark run"
-        fi
+        info "No models found. Models will be downloaded automatically during first benchmark run"
+        info "Or download manually now with:"
+        echo "  python3 << 'EOF'"
+        echo "  from tinygrad.helpers import fetch"
+        echo "  from defaults import MODEL_CONFIGS"
+        echo "  fetch(MODEL_CONFIGS['nf4']['url'], name='./models/Llama-3.2-1B-Instruct-Q4_K_M.gguf')"
+        echo "  EOF"
     fi
 
     create_marker "$MARKER"
@@ -638,12 +599,10 @@ phase9_verify() {
 
     success "Setup script completed successfully!"
 
-    prompt "Reload shell now? (y/n): "
-    read -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        exec bash
-    fi
+    info "To apply environment changes, reload your shell with:"
+    echo "  source ~/.bashrc"
+    echo ""
+    echo "Or start a new shell session"
 }
 
 # ============================================================================
