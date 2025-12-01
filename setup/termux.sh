@@ -115,7 +115,8 @@ phase2_clone() {
         git clone "$REPO_URL" "$PROJECT_DIR"
     fi
     cd "$PROJECT_DIR"
-    git submodule update --init --recursive
+    # Only init tinygrad submodule (not recursive to avoid issues)
+    git submodule update --init deps/tinygrad
 
     create_marker "$MARKER"
     success "Repository cloned"
