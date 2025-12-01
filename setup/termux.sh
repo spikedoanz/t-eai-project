@@ -13,7 +13,7 @@
 #   - Stable internet connection
 #
 # Usage:
-#   bash <(curl -sL https://raw.githubusercontent.com/spikedoanz/t-eai-project/master/setup/termux.sh)
+#   curl -sL https://raw.githubusercontent.com/spikedoanz/t-eai-project/master/setup/termux.sh | bash
 
 set -e  # Exit on error
 set -u  # Exit on undefined variable
