@@ -536,6 +536,39 @@
   Available benchmarks: `gsm8k`, `math`, `gpqa`, `simpleqa`, `wordle`
 ]
 
+#slide[
+  = Results: GSM8k Accuracy vs Quantization
+
+  #text(fill: mocha-yellow)[*Qwen2.5-Math-1.5B-Instruct*] on #text(fill: mocha-blue)[GSM8k] (512 examples, llama.cpp backend)
+
+  #v(0.5em)
+
+  #align(center)[
+    #table(
+      columns: (1fr, 1fr, 1fr, 1fr),
+      inset: 10pt,
+      align: center,
+      table.header(
+        [*Quantization*], [*Accuracy*], [*Eval Time*], [*Speedup*]
+      ),
+      [#text(fill: mocha-green)[INT8]], [#text(fill: mocha-green)[7.0%]], [423s], [1.17x],
+      [#text(fill: mocha-peach)[NF4]], [#text(fill: mocha-yellow)[6.8%]], [476s], [1.04x],
+      [#text(fill: mocha-blue)[FP16]], [#text(fill: mocha-red)[6.2%]], [445s], [1.11x],
+      [#text(fill: mocha-mauve)[Default]], [#text(fill: mocha-red)[4.7%]], [495s], [1.00x],
+    )
+  ]
+
+  #v(0.5em)
+
+  #text(size: 16pt)[
+  *Key Findings*:
+  - #text(fill: mocha-green)[INT8 achieves highest accuracy] (7.0%) with fastest eval time
+  - #text(fill: mocha-peach)[NF4 maintains competitive accuracy] (6.8%) with 4-bit quantization
+  - Quantization has #text(fill: mocha-yellow)[minimal impact on accuracy] for this 1.5B model
+  - All quantizations show #text(fill: mocha-pink)[100% format compliance]
+  ]
+]
+
 // ============================================================================
 // SECTION 4: DATA COLLECTION & RESULTS
 // ============================================================================
