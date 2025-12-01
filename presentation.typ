@@ -102,7 +102,7 @@
 #slide[
   = Introduction & Background
 
-  #v(1em)
+  #v(0.5em)
 
   == The Rise of Local LLM Deployment
 
@@ -112,13 +112,11 @@
     - #text(fill: mocha-blue)[*Consumer hardware*]: laptops, gaming PCs
     - #text(fill: mocha-mauve)[*Enterprise GPUs*]: data center deployments
 
-  #v(1em)
 
   == The Memory Challenge
 
   - LLMs contain #text(fill: mocha-red)[*massive weights*] requiring significant memory
   - Activations during inference are also substantial
-  - Example: #text(fill: mocha-yellow)[Llama-3.1-8B] requires ~16GB in FP16
 ]
 
 #slide[
