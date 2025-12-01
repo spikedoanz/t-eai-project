@@ -94,7 +94,7 @@ phase1_packages() {
     export DEBIAN_FRONTEND=noninteractive
     pkg update -y
     pkg upgrade -y -o Dpkg::Options::="--force-confold" || true
-    pkg install -y python python-pip git wget curl golang
+    pkg install -y git wget curl
     pkg install -y opencl-headers opencl-vendor-driver || true
 
     create_marker "$MARKER"
