@@ -701,12 +701,10 @@
   = Results: Speedup Analysis
 
   #align(center)[
-    #image("docs/images/speedup_comparison.png", width: 85%)
+    #image("docs/images/speedup_comparison.png", width: 75%)
   ]
 
-  #v(0.2em)
-
-  #text(size: 16pt)[
+  #text(size: 15pt)[
   *Observations*:
   - llama.cpp shows 16.6x speedup over tinygrad for NF4
   - tinygrad leads by 8.0x for float16 workloads
