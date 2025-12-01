@@ -819,6 +819,39 @@
   ]
 ]
 
+#slide[
+  = Analysis: FP16 Performance Anomaly
+
+  == Why llama.cpp FP16 is slow on Adreno GPUs
+
+  #text(size: 14pt)[
+  #grid(
+    columns: (1fr, 1fr),
+    gutter: 1em,
+    [
+      *The Problem*:
+      - llama.cpp FP16: #text(fill: mocha-red)[3.2 tok/s] vs tinygrad: #text(fill: mocha-green)[25.4 tok/s]
+      - #text(fill: mocha-yellow)[~8x difference] on same hardware
+
+      *Root Cause*:
+      - llama.cpp OpenCL only optimizes #text(fill: mocha-blue)[Q4_0] (FP16 "in progress")
+      - Memory copying overhead (host ↔ GPU)
+    ],
+    [
+      *Hardware Reality*:
+      - Adreno executes FP16 at #text(fill: mocha-peach)[2x rate] vs FP32
+      - Hardware capable, software doesn't leverage it
+
+      *Recommendation*:
+      - FP16 on Pixel → #text(fill: mocha-mauve)[tinygrad]
+      - llama.cpp on Pixel → #text(fill: mocha-blue)[Q4_0/NF4]
+    ]
+  )
+  ]
+
+  #text(size: 11pt, fill: mocha-overlay2)[Source: llama.cpp GitHub #5965, Qualcomm Developer Blog (Nov 2024)]
+]
+
 // ============================================================================
 // COMPLETED plots:
 // ✅ Latency distribution (box plots showing variance)
@@ -923,6 +956,39 @@
   - Automated setup script (`curl | sh`)
   - CI/CD backend for continuous benchmarking
   - Public data aggregation platform
+]
+
+#slide[
+  = Demo: Pixel 7 Pro Benchmarking
+
+  #grid(
+    columns: (1fr, 1fr),
+    gutter: 2em,
+    [
+      #align(center)[
+        #image("setup/termux_qr.png", width: 70%)
+
+        #v(0.5em)
+
+        #text(size: 14pt, fill: mocha-sapphire)[Scan to get Termux setup script]
+      ]
+    ],
+    [
+      == Try It Yourself
+
+      #text(size: 16pt)[
+      + Install #text(fill: mocha-peach)[Termux] from F-Droid
+      + Scan QR or run:
+        #text(size: 12pt)[`curl -sSL bit.ly/termux-bench | sh`]
+      + Automated setup:
+        - Python
+        - tinygrad
+        - Model download
+        - Run benchmarks
+        - Visualize locally
+      ]
+    ]
+  )
 ]
 
 #slide[
