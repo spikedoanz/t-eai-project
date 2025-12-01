@@ -22,7 +22,7 @@ set -u  # Exit on undefined variable
 # CONFIGURATION
 # ============================================================================
 
-REPO_URL="git@github.com:spikedoanz/t-eai-project.git"
+REPO_URL="https://github.com/spikedoanz/t-eai-project.git"
 PROJECT_DIR="$HOME/t-eai-project"
 VENV_DIR="$PROJECT_DIR/.venv"
 REQUIRED_STORAGE_GB=5
@@ -189,11 +189,8 @@ phase5_benchmark() {
     source "$VENV_DIR/bin/activate"
 
     # OpenCL environment for Adreno GPU
-    export LD_LIBRARY_PATH=/vendor/lib64:/system/vendor/lib64:${LD_LIBRARY_PATH:-}
-    export GPU=1
-    export OPENCL=1
-    export PYOPENCL_CTX=0
-    export PYOPENCL_PLATFORM=0
+    export LD_LIBRARY_PATH=/vendor/lib64/egl:/vendor/lib64:${LD_LIBRARY_PATH:-}
+    export LD_LIBRARY_PATH=/vendor/lib64:${LD_LIBRARY_PATH:-}
     export PYTHONPATH="$PROJECT_DIR/deps/tinygrad"
 
     python3 tinygrad_benchmark.py
