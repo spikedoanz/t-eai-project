@@ -7,3 +7,6 @@
 [submodule "deps/verifiers"]
 	path = deps/verifiers
 	url = https://github.com/PrimeIntellect-ai/verifiers.git
+[submodule "deps/mlc-llm"]
+	path = deps/mlc-llm
+	url = https://github.com/mlc-ai/mlc-llm.git
