@@ -243,50 +243,83 @@
 #slide[
   = Benchmark Workflow
 
-  #align(center)[
-    #text(size: 16pt)[
-    #grid(
-      columns: (1fr),
-      gutter: 0.3em,
-      [
-        #rect(fill: rgb("#e3f2fd"), inset: 0.6em, width: 80%)[
-          *1. Model Preparation*
+  #text(size: 13pt)[
+  // Row 1: Pixel Setup & Model Prep
+  #grid(
+    columns: (1fr, auto, 1fr, auto, 1fr),
+    gutter: 0.4em,
+    [
+      #rect(fill: rgb("#ede7f6"), inset: 0.5em, height: 100%)[
+        *0. Pixel Setup*
 
-          Download & quantize models (llama.cpp GGUF, tinygrad weights)
-        ]
-      ],
-      [
-        #align(center)[↓]
-      ],
-      [
-        #rect(fill: rgb("#fff3e0"), inset: 0.6em, width: 80%)[
-          *2. Run Benchmarks*
+        Termux + SSH + OpenCL
 
-          Execute across devices/quantizations → Raw `.txt` logs
-        ]
-      ],
-      [
-        #align(center)[↓]
-      ],
-      [
-        #rect(fill: rgb("#fce4ec"), inset: 0.6em, width: 80%)[
-          *3. Collate Results*
+        `croc`, `cmake`, `clang`
+      ]
+    ],
+    [→],
+    [
+      #rect(fill: rgb("#e3f2fd"), inset: 0.5em, height: 100%)[
+        *1. Model Prep*
 
-          Parse logs → Structured CSV (UUID, metrics, metadata)
-        ]
-      ],
-      [
-        #align(center)[↓]
-      ],
-      [
-        #rect(fill: rgb("#e8f5e9"), inset: 0.6em, width: 80%)[
-          *4. Analysis & Visualization*
+        Download models
 
-          Generate plots → Embed in presentation
-        ]
-      ],
-    )
-    ]
+        Quantize (GGUF/HF)
+      ]
+    ],
+    [→],
+    [
+      #rect(fill: rgb("#fff3e0"), inset: 0.5em, height: 100%)[
+        *2. Run Benchmarks*
+
+        Execute on devices
+
+        Output: `.txt` logs
+      ]
+    ],
+  )
+
+  #v(0.5em)
+
+  // Row 2: Presentation (leftmost) and remaining workflow (snake back)
+  #grid(
+    columns: (1fr, auto, 1fr, auto, 1fr),
+    gutter: 0.4em,
+    [
+      #rect(fill: rgb("#c8e6c9"), inset: 0.5em, height: 100%)[
+        *5. Presentation*
+
+        Embed plots
+
+        `typst compile`
+      ]
+    ],
+    [←],
+    [
+      #rect(fill: rgb("#e8f5e9"), inset: 0.5em, height: 100%)[
+        *4. Visualize*
+
+        Generate plots
+
+        `.png` files
+      ]
+    ],
+    [←],
+    [
+      #rect(fill: rgb("#fce4ec"), inset: 0.5em, height: 100%)[
+        *3. Collate*
+
+        Parse logs
+
+        Structured CSV
+      ]
+    ],
+  )
+  ]
+
+  #v(0.3em)
+  #text(size: 12pt)[
+    Flow: Pixel setup → Model prep → Benchmarks → Collation → Visualization → Presentation
   ]
 ]
 
