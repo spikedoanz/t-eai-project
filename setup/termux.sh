@@ -24,7 +24,7 @@ set -u  # Exit on undefined variable
 # CONFIGURATION
 # ============================================================================
 
-REPO_URL="https://github.com/spikedoanz/t-eai-project.git"
+REPO_URL="git@github.com:spikedoanz/t-eai-project.git"
 PROJECT_DIR="$HOME/t-eai-project"
 PYTHON_MIN_VERSION="3.11"
 REQUIRED_STORAGE_GB=10
