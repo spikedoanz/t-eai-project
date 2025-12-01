@@ -1,21 +1,21 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# Pixel 7/8 Benchmark Setup Script for t-eai-project (llama.cpp backend)
+# Pixel 7/8 Benchmark Setup Script for t-eai-project (tinygrad backend)
 #
 # This script automates the complete setup from blank Termux installation
 # to a ready-to-benchmark environment for LLM inference testing.
 #
 # Prerequisites:
 #   - Termux installed from F-Droid (NOT Play Store)
-#   - At least 10GB free storage
+#   - At least 5GB free storage
 #   - Stable internet connection
 #
 # Usage:
-#   bash <(curl -sL https://raw.githubusercontent.com/spikedoanz/t-eai-project/master/setup/pixel7_setup.sh)
+#   bash <(curl -sL https://raw.githubusercontent.com/spikedoanz/t-eai-project/master/setup/termux.sh)
 #
 #   Or manually:
-#   curl -O https://raw.githubusercontent.com/spikedoanz/t-eai-project/master/setup/pixel7_setup.sh
-#   chmod +x pixel7_setup.sh
-#   ./pixel7_setup.sh
+#   curl -O https://raw.githubusercontent.com/spikedoanz/t-eai-project/master/setup/termux.sh
+#   chmod +x termux.sh
+#   ./termux.sh
 
 set -e  # Exit on error
 set -u  # Exit on undefined variable
@@ -27,7 +27,7 @@ set -u  # Exit on undefined variable
 REPO_URL="git@github.com:spikedoanz/t-eai-project.git"
 PROJECT_DIR="$HOME/t-eai-project"
 PYTHON_MIN_VERSION="3.11"
-REQUIRED_STORAGE_GB=10
+REQUIRED_STORAGE_GB=5
 
 # ============================================================================
 # COLOR OUTPUT HELPERS
@@ -120,7 +120,7 @@ phase0_preflight() {
     echo ""
     echo "========================================"
     echo "  Pixel 7/8 Benchmark Setup Script"
-    echo "  t-eai-project (llama.cpp backend)"
+    echo "  t-eai-project (tinygrad backend)"
     echo "========================================"
     echo ""
 
@@ -129,15 +129,14 @@ phase0_preflight() {
 
     prompt "This script will:"
     echo "  1. Install required Termux packages"
-    echo "  2. Setup SSH access (optional Tailscale)"
+    echo "  2. Setup SSH access"
     echo "  3. Install file transfer tools (croc)"
     echo "  4. Configure OpenCL for GPU acceleration"
     echo "  5. Clone t-eai-project repository"
-    echo "  6. Build llama.cpp with OpenCL support"
-    echo "  7. Setup Python environment"
-    echo "  8. Prepare for model downloads"
+    echo "  6. Setup Python environment"
+    echo "  7. Prepare for model downloads"
     echo ""
-    echo "Estimated time: 30-60 minutes (or seconds if cached)"
+    echo "Estimated time: 5-10 minutes (or seconds if cached)"
     echo "Required storage: ${REQUIRED_STORAGE_GB}GB"
     echo ""
     info "Starting automated setup..."
@@ -161,14 +160,11 @@ phase1_packages() {
     info "Upgrading existing packages..."
     pkg upgrade -y || warn "Some packages failed to upgrade (continuing anyway)"
 
-    info "Installing essential build tools..."
+    info "Installing essential packages..."
     pkg install -y \
         python \
         python-pip \
         git \
-        cmake \
-        clang \
-        ninja \
         wget \
         curl \
         || error "Failed to install essential packages"
@@ -319,6 +315,10 @@ phase4_opencl() {
 export LD_LIBRARY_PATH=/system/vendor/lib64:$LD_LIBRARY_PATH
 export PYOPENCL_CTX=0
 export PYOPENCL_PLATFORM=0
+
+# Tinygrad GPU configuration
+export GPU=1
+export OPENCL=1
 EOF
         success "OpenCL environment variables added to ~/.bashrc"
     else
@@ -329,6 +329,8 @@ EOF
     export LD_LIBRARY_PATH=/system/vendor/lib64:$LD_LIBRARY_PATH
     export PYOPENCL_CTX=0
     export PYOPENCL_PLATFORM=0
+    export GPU=1
+    export OPENCL=1
 
     create_marker "$MARKER"
     success "Phase 4 complete: OpenCL configured"
@@ -369,81 +371,16 @@ phase5_clone() {
 }
 
 # ============================================================================
-# PHASE 6: BUILD LLAMA.CPP WITH OPENCL
+# PHASE 6: PYTHON ENVIRONMENT SETUP
 # ============================================================================
 
-phase6_build_llama() {
-    local MARKER="$HOME/.setup_markers/phase6_build_llama"
-    if skip_if_exists "$MARKER" "llama.cpp Build"; then
-        return 0
-    fi
-
-    info "PHASE 6: Building llama.cpp with OpenCL support..."
-
-    cd "$PROJECT_DIR/deps/llama.cpp"
-
-    # Check if binaries already exist (cache check)
-    if [ -f "build/bin/llama-server" ] && [ -f "build/bin/llama-bench" ]; then
-        info "llama.cpp binaries already exist"
-
-        # Verify they work
-        if ./build/bin/llama-server --version 2>/dev/null; then
-            success "Existing llama.cpp build verified and working"
-            create_marker "$MARKER"
-            return 0
-        else
-            warn "Existing binaries found but not working, will rebuild"
-        fi
-    fi
-
-    # Clean previous build if exists but broken
-    if [ -d "build" ]; then
-        warn "Previous build directory exists but binaries missing/broken - cleaning"
-        rm -rf build
-    fi
-
-    mkdir -p build
-    cd build
-
-    info "Running CMake configuration with OpenCL..."
-    cmake .. \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DGGML_OPENCL=ON \
-        -DCMAKE_C_COMPILER=clang \
-        -DCMAKE_CXX_COMPILER=clang++ \
-        || error "CMake configuration failed"
-
-    info "Building llama.cpp (this may take 10-20 minutes)..."
-    cmake --build . --config Release -j$(nproc) || error "Build failed"
-
-    # Verify binaries
-    info "Verifying build artifacts..."
-    if [ ! -f "bin/llama-server" ]; then
-        error "llama-server binary not found"
-    fi
-    if [ ! -f "bin/llama-bench" ]; then
-        error "llama-bench binary not found"
-    fi
-
-    # Test binary
-    info "Testing llama-server binary..."
-    ./bin/llama-server --version || warn "llama-server version check failed (may still work)"
-
-    create_marker "$MARKER"
-    success "Phase 6 complete: llama.cpp built successfully"
-}
-
-# ============================================================================
-# PHASE 7: PYTHON ENVIRONMENT SETUP
-# ============================================================================
-
-phase7_python() {
-    local MARKER="$HOME/.setup_markers/phase7_python"
+phase6_python() {
+    local MARKER="$HOME/.setup_markers/phase6_python"
     if skip_if_exists "$MARKER" "Python Environment"; then
         return 0
     fi
 
-    info "PHASE 7: Setting up Python environment..."
+    info "PHASE 6: Setting up Python environment..."
 
     cd "$PROJECT_DIR"
 
@@ -500,20 +437,20 @@ phase7_python() {
     fi
 
     create_marker "$MARKER"
-    success "Phase 7 complete: Python environment ready"
+    success "Phase 6 complete: Python environment ready"
 }
 
 # ============================================================================
-# PHASE 8: MODEL DOWNLOAD PREPARATION
+# PHASE 7: MODEL DOWNLOAD PREPARATION
 # ============================================================================
 
-phase8_models() {
-    local MARKER="$HOME/.setup_markers/phase8_models"
+phase7_models() {
+    local MARKER="$HOME/.setup_markers/phase7_models"
     if skip_if_exists "$MARKER" "Model Download Preparation"; then
         return 0
     fi
 
-    info "PHASE 8: Model download preparation..."
+    info "PHASE 7: Model download preparation..."
 
     cd "$PROJECT_DIR"
 
@@ -549,15 +486,15 @@ phase8_models() {
     fi
 
     create_marker "$MARKER"
-    success "Phase 8 complete: Ready for model downloads"
+    success "Phase 7 complete: Ready for model downloads"
 }
 
 # ============================================================================
-# PHASE 9: VERIFICATION AND NEXT STEPS
+# PHASE 8: VERIFICATION AND NEXT STEPS
 # ============================================================================
 
-phase9_verify() {
-    info "PHASE 9: Final verification..."
+phase8_verify() {
+    info "PHASE 8: Final verification..."
 
     cd "$PROJECT_DIR"
 
@@ -573,7 +510,6 @@ phase9_verify() {
     echo "  [✓] croc file transfer tool installed"
     echo "  [✓] OpenCL GPU configured"
     echo "  [✓] Repository cloned"
-    echo "  [✓] llama.cpp built with OpenCL"
     echo "  [✓] Python environment ready"
     echo "  [✓] Ready for benchmarking"
     echo ""
@@ -585,13 +521,12 @@ phase9_verify() {
     echo "  2. Review benchmark documentation:"
     echo "     cat setup/PIXEL-BENCHMARK.md"
     echo ""
-    echo "  3. Run benchmarks (quick):"
+    echo "  3. Run benchmarks:"
     echo "     cd ~/t-eai-project"
-    echo "     ./pixel_benchmark_wrapper.sh"
+    echo "     python3 tinygrad_benchmark.py"
     echo ""
-    echo "  4. Or run benchmarks manually:"
-    echo "     python3 llamacpp_benchmark.py"
-    echo "     python3 llamacpp_sweep.py --env gsm8k --num-examples 20"
+    echo "  4. Or run full benchmark suite:"
+    echo "     python3 tinygrad_sweep.py --env wordle --num-examples 20"
     echo ""
     echo "  5. Transfer results to host:"
     echo "     croc send benchmark_output/"
@@ -616,10 +551,9 @@ main() {
     phase3_croc
     phase4_opencl
     phase5_clone
-    phase6_build_llama
-    phase7_python
-    phase8_models
-    phase9_verify
+    phase6_python
+    phase7_models
+    phase8_verify
 }
 
 # Run main function
