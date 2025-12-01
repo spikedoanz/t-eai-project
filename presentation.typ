@@ -539,57 +539,76 @@
 #slide[
   = Benchmark Tasks Explained
 
-  #text(size: 16pt)[
+  #text(size: 14pt)[
   #grid(
-    columns: (1fr, 1fr),
-    gutter: 1.5em,
+    columns: (1fr, 1fr, 1fr),
+    gutter: 1em,
     [
-      == #text(fill: mocha-blue)[GSM8k] - Grade School Math
+      == #text(fill: mocha-blue)[GSM8k]
+      Grade School Math
 
       Tests mathematical reasoning on word problems
 
-      #v(0.3em)
+      #v(0.2em)
 
-      *Example Input:*
+      *Input:*
       ```
-      "A restaurant serves 20 customers
-      per hour. If it's open 8 hours,
-      how many customers total?"
-      ```
-
-      #v(0.3em)
-
-      *Expected Output:*
-      ```
-      160
+      "A restaurant serves
+      20 customers/hour.
+      If open 8 hours,
+      how many total?"
       ```
 
-      #v(0.3em)
+      *Output:* `160`
 
-      *Metric*: Exact answer match (correct/incorrect)
+      #v(0.2em)
+
+      *Metric*: Exact match
     ],
     [
-      == #text(fill: mocha-pink)[Reverse Text] - String Manipulation
+      == #text(fill: mocha-pink)[Reverse Text]
+      String Manipulation
 
-      Tests ability to reverse input strings character-by-character
+      Tests character-by-character string reversal
 
-      #v(0.3em)
+      #v(0.2em)
 
-      *Example Input:*
+      *Input:*
       ```
       "hello world"
       ```
 
-      #v(0.3em)
+      #v(0.5em)
 
-      *Expected Output:*
+      *Output:*
       ```
       "dlrow olleh"
       ```
 
-      #v(0.3em)
+      #v(0.2em)
 
-      *Metric*: LCS (Longest Common Subsequence) similarity score
+      *Metric*: LCS similarity
+    ],
+    [
+      == #text(fill: mocha-green)[Wordle]
+      Word Guessing Game
+
+      Tests strategic word guessing with feedback
+
+      #v(0.2em)
+
+      *Input:*
+      ```
+      Target: "CRANE"
+      Guess: "PRINT"
+      Feedback: ⬜🟨🬜⬜🟩
+      ```
+
+      *Output:* Next guess
+
+      #v(0.2em)
+
+      *Metric*: Format + partial credit
     ]
   )
   ]
@@ -598,35 +617,33 @@
 #slide[
   = Results: Downstream Task Accuracy
 
-  #text(fill: mocha-yellow)[*Qwen2.5-Math-1.5B-Instruct*] evaluated on #text(fill: mocha-blue)[GSM8k] and #text(fill: mocha-pink)[Reverse Text] (llama.cpp backend)
-
-  #v(0.3em)
+  #text(fill: mocha-yellow)[*Qwen2.5-Math-1.5B-Instruct*] on #text(fill: mocha-blue)[GSM8k], #text(fill: mocha-pink)[Reverse Text], #text(fill: mocha-green)[Wordle] (llama.cpp)
 
   #align(center)[
-    #text(size: 14pt)[
+    #text(size: 12pt)[
     #table(
-      columns: (1fr, 1fr, 1fr, 1fr, 1fr),
-      inset: 8pt,
+      columns: (auto, auto, auto, auto, auto, auto, auto),
+      inset: 6pt,
       align: center,
       table.header(
-        [*Quantization*], [*GSM8k Acc*], [*GSM8k Time*], [*RevText LCS*], [*RevText Time*]
+        [*Quant*], [*GSM8k*], [*Time*], [*RevText*], [*Time*], [*Wordle*], [*Time*]
       ),
-      [#text(fill: mocha-green)[INT8]], [#text(fill: mocha-green)[7.0%]], [423s], [#text(fill: mocha-green)[10.6%]], [158s],
-      [#text(fill: mocha-peach)[NF4]], [#text(fill: mocha-yellow)[6.8%]], [476s], [#text(fill: mocha-green)[11.9%]], [183s],
-      [#text(fill: mocha-blue)[FP16]], [#text(fill: mocha-red)[6.2%]], [445s], [#text(fill: mocha-yellow)[10.2%]], [264s],
-      [#text(fill: mocha-mauve)[Default]], [#text(fill: mocha-red)[4.7%]], [495s], [#text(fill: mocha-yellow)[10.5%]], [189s],
+      [#text(fill: mocha-green)[INT8]], [7.0%], [423s], [10.6%], [158s], [14.0%], [9s],
+      [#text(fill: mocha-peach)[NF4]], [6.8%], [476s], [11.9%], [183s], [14.0%], [11s],
+      [#text(fill: mocha-blue)[FP16]], [6.2%], [445s], [10.2%], [264s], [14.0%], [13s],
+      [#text(fill: mocha-mauve)[Default]], [4.7%], [495s], [10.5%], [189s], [14.1%], [16s],
     )
     ]
   ]
 
-  #v(0.3em)
+  #v(0.2em)
 
-  #text(size: 15pt)[
+  #text(size: 14pt)[
   *Key Findings*:
   - #text(fill: mocha-green)[Quantization does not degrade performance] - INT8/NF4 match or exceed baseline
-  - #text(fill: mocha-blue)[INT8 provides best speed/accuracy trade-off] with fastest eval times
+  - #text(fill: mocha-blue)[INT8 provides best speed/accuracy trade-off] across all tasks
   - #text(fill: mocha-yellow)[Minimal variance across quantizations] (within measurement error)
-  - #text(fill: mocha-pink)[All quantizations maintain 100% format compliance] on both tasks
+  - #text(fill: mocha-pink)[Wordle shows identical performance] (14%) across all quantizations
   ]
 ]
 
