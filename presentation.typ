@@ -4,8 +4,54 @@
 
 #import "@preview/polylux:0.4.0": *
 
-#set page(paper: "presentation-16-9")
-#set text(font: "JetBrainsMono NF", size: 20pt)
+// Catppuccin Mocha color palette
+#let mocha-base = rgb("#1e1e2e")
+#let mocha-mantle = rgb("#181825")
+#let mocha-crust = rgb("#11111b")
+#let mocha-text = rgb("#cdd6f4")
+#let mocha-subtext1 = rgb("#bac2de")
+#let mocha-subtext0 = rgb("#a6adc8")
+#let mocha-overlay2 = rgb("#9399b2")
+#let mocha-surface0 = rgb("#313244")
+#let mocha-surface1 = rgb("#45475a")
+#let mocha-surface2 = rgb("#585b70")
+#let mocha-blue = rgb("#89b4fa")
+#let mocha-lavender = rgb("#b4befe")
+#let mocha-sapphire = rgb("#74c7ec")
+#let mocha-sky = rgb("#89dceb")
+#let mocha-teal = rgb("#94e2d5")
+#let mocha-green = rgb("#a6e3a1")
+#let mocha-yellow = rgb("#f9e2af")
+#let mocha-peach = rgb("#fab387")
+#let mocha-maroon = rgb("#eba0ac")
+#let mocha-red = rgb("#f38ba8")
+#let mocha-mauve = rgb("#cba6f7")
+#let mocha-pink = rgb("#f5c2e7")
+#let mocha-flamingo = rgb("#f2cdcd")
+#let mocha-rosewater = rgb("#f5e0dc")
+
+#set page(paper: "presentation-16-9", fill: mocha-base)
+#set text(font: "JetBrainsMono NF", size: 20pt, fill: mocha-text)
+
+// Code block styling for dark theme
+#show raw.where(block: true): it => {
+  block(
+    fill: mocha-surface0,
+    inset: 0.8em,
+    radius: 4pt,
+    width: 100%,
+    text(fill: mocha-text, it)
+  )
+}
+
+#show raw.where(block: false): it => {
+  box(
+    fill: mocha-surface0,
+    inset: (x: 0.3em, y: 0.2em),
+    radius: 2pt,
+    text(fill: mocha-text, it)
+  )
+}
 
 #let footer-text = [Doan & Dinh | CSC 4228/6228 | Fall 2024]
 
@@ -196,44 +242,48 @@
   = System Architecture
 
   #align(center)[
-    #rect(width: 90%, inset: 1em, stroke: 1pt)[
+    #box(width: 90%)[
+      #text(size: 16pt)[
       #grid(
         columns: (1fr, 1fr, 1fr),
-        gutter: 1em,
+        gutter: 0.8em,
         [
-          #rect(fill: rgb("#e3f2fd"), inset: 0.8em)[
-            *Benchmark Scripts*
-
-            `tinygrad_benchmark.py`
-            `llamacpp_benchmark.py`
+          #rect(fill: mocha-surface0, inset: 0.6em, stroke: 1pt + mocha-blue)[
+            *Benchmark Scripts* \
+            #v(0.2em)
+            `tinygrad_benchmark.py` \
+            `llamacpp_benchmark.py` \
             `mlc_benchmark.py`
           ]
         ],
         [
-          #rect(fill: rgb("#fff3e0"), inset: 0.8em)[
-            *Data Collection*
-
-            `*_collate.py`
-            `*_parse.py`
+          #rect(fill: mocha-surface0, inset: 0.6em, stroke: 1pt + mocha-peach)[
+            *Data Collection* \
+            #v(0.2em)
+            `*_collate.py` \
+            `*_parse.py` \
             CSV output
           ]
         ],
         [
-          #rect(fill: rgb("#e8f5e9"), inset: 0.8em)[
-            *Analysis & Viz*
-
-            `visualize_benchmarks.py`
+          #rect(fill: mocha-surface0, inset: 0.6em, stroke: 1pt + mocha-green)[
+            *Analysis & Viz* \
+            #v(0.2em)
+            `visualize_benchmarks.py` \
             `benchmark_analysis.py`
           ]
         ],
       )
+      ]
     ]
   ]
 
+  #text(size: 16pt)[
   == Key Design Principles
   - *Reproducibility*: Seeded runs, UUID tracking
   - *Extensibility*: Easy to add new backends/devices
-  - *Standardized schema*: Consistent CSV format across all backends
+  - *Standardized schema*: Consistent CSV format
+  ]
 ]
 
 #slide[
@@ -245,8 +295,8 @@
         columns: (1fr, 1fr, 1fr),
         gutter: 0.8em,
         [
-          #rect(fill: rgb("#ede7f6"), inset: 0.8em, width: 100%)[
-            #text(size: 14pt)[
+          #rect(fill: mocha-surface0, inset: 0.8em, width: 100%, stroke: 1pt + mocha-mauve)[
+            #text(size: 14pt, fill: mocha-text)[
               *0. Pixel Setup* \
               Termux + SSH + OpenCL \
               `croc`, `cmake`
@@ -254,8 +304,8 @@
           ]
         ],
         [
-          #rect(fill: rgb("#e3f2fd"), inset: 0.8em, width: 100%)[
-            #text(size: 14pt)[
+          #rect(fill: mocha-surface0, inset: 0.8em, width: 100%, stroke: 1pt + mocha-blue)[
+            #text(size: 14pt, fill: mocha-text)[
               *1. Model Prep* \
               Download models \
               Quantize (GGUF/HF)
@@ -263,8 +313,8 @@
           ]
         ],
         [
-          #rect(fill: rgb("#fff3e0"), inset: 0.8em, width: 100%)[
-            #text(size: 14pt)[
+          #rect(fill: mocha-surface0, inset: 0.8em, width: 100%, stroke: 1pt + mocha-peach)[
+            #text(size: 14pt, fill: mocha-text)[
               *2. Run Benchmarks* \
               Execute on devices \
               Output: `.txt` logs
@@ -272,8 +322,8 @@
           ]
         ],
         [
-          #rect(fill: rgb("#fce4ec"), inset: 0.8em, width: 100%)[
-            #text(size: 14pt)[
+          #rect(fill: mocha-surface0, inset: 0.8em, width: 100%, stroke: 1pt + mocha-pink)[
+            #text(size: 14pt, fill: mocha-text)[
               *3. Collate* \
               Parse logs \
               Structured CSV
@@ -281,8 +331,8 @@
           ]
         ],
         [
-          #rect(fill: rgb("#e8f5e9"), inset: 0.8em, width: 100%)[
-            #text(size: 14pt)[
+          #rect(fill: mocha-surface0, inset: 0.8em, width: 100%, stroke: 1pt + mocha-teal)[
+            #text(size: 14pt, fill: mocha-text)[
               *4. Visualize* \
               Generate plots \
               `.png` files
@@ -290,8 +340,8 @@
           ]
         ],
         [
-          #rect(fill: rgb("#c8e6c9"), inset: 0.8em, width: 100%)[
-            #text(size: 14pt)[
+          #rect(fill: mocha-surface0, inset: 0.8em, width: 100%, stroke: 1pt + mocha-green)[
+            #text(size: 14pt, fill: mocha-text)[
               *5. Presentation* \
               Embed plots \
               `typst compile`
@@ -426,9 +476,12 @@
       ```
     ]
   )
-  ]
 
-  Full setup guide: `docs/WORKFLOW.md` & `setup/PIXEL-SSH.md`
+  #v(0.3em)
+  #text(size: 11pt)[
+    Full setup guide: `docs/WORKFLOW.md` & `setup/PIXEL-SSH.md`
+  ]
+  ]
 ]
 
 #slide[
@@ -566,10 +619,12 @@
     #image("docs/images/latency_distribution.png", width: 90%)
   ]
 
+  #text(size: 16pt)[
   *Latency variance*:
   - Box plots show distribution of per-token generation time
   - llama.cpp shows lower variance for NF4 and default
   - tinygrad has more consistent latency across quantizations
+  ]
 ]
 
 #slide[
@@ -681,6 +736,7 @@
 #slide[
   = Contributions
 
+  #text(size: 18pt)[
   #grid(
     columns: (1fr, 1fr),
     gutter: 1.5em,
@@ -690,7 +746,7 @@
       - Standardized data format
       - Easy to extend to new devices
 
-      #v(0.5em)
+      #v(0.3em)
 
       == Public Codebase
       - MIT licensed
@@ -703,13 +759,14 @@
       - Quantization trade-off analysis
       - Downstream accuracy evaluation
 
-      #v(0.5em)
+      #v(0.3em)
 
       == Community Benefit
       - Others can benchmark their devices
       - Append results to shared data bank
     ]
   )
+  ]
 ]
 
 #slide[
