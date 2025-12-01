@@ -151,18 +151,17 @@
 #slide[
   = Background: Quantization Strategies
 
-  #v(0.5em)
-
+  #text(size: 18pt)[
   #grid(
     columns: (1fr, 1fr),
-    gutter: 2em,
+    gutter: 1.5em,
     [
       == Weight-Only Quantization
       - #text(fill: mocha-green)[*INT8*]: 8-bit integer weights
       - #text(fill: mocha-yellow)[*INT4*]: 4-bit integer weights
       - #text(fill: mocha-peach)[*NF4*]: 4-bit NormalFloat (QLoRA)
 
-      #v(1em)
+      #v(0.5em)
 
       == Group-wise Quantization
       - #text(fill: mocha-mauve)[*GPTQ*]: Post-training quantization
@@ -173,13 +172,14 @@
       - Reduces memory for long contexts
       - #text(fill: mocha-sky)[INT8] or #text(fill: mocha-sapphire)[INT4] KV cache
 
-      #v(1em)
+      #v(0.5em)
 
       == Activation Quantization
       - #text(fill: mocha-blue)[*W8A8*]: Both weights and activations in INT8
       - *W4A4*: Aggressive 4-bit for both
     ]
   )
+  ]
 ]
 
 // ============================================================================
