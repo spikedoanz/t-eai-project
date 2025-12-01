@@ -3,7 +3,7 @@
 	url = https://github.com/ggml-org/llama.cpp
 [submodule "deps/tinygrad"]
 	path = deps/tinygrad
-	url = https://github.com/tinygrad/tinygrad
+	url = https://github.com/spikedoanz/tinygrad.git
 [submodule "deps/verifiers"]
 	path = deps/verifiers
 	url = https://github.com/PrimeIntellect-ai/verifiers.git
