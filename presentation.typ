@@ -682,16 +682,25 @@
 ]
 
 #slide[
-  = Results: Throughput Comparison
+  #align(left)[#text(size: 24pt, fill: mocha-mauve, weight: "bold")[Results: Throughput Comparison]]
 
-  #align(center)[
-    #image("docs/images/backend_comparison.png", width: 90%)
-  ]
+  #v(0.3em)
 
-  *Key findings*:
-  - llama.cpp excels with NF4 (46.4 tok/s) and default (41.3 tok/s)
-  - tinygrad performs best with INT8 (27.5 tok/s) and float16 (25.4 tok/s)
-  - Performance varies significantly by quantization method
+  #grid(
+    columns: (1.1fr, 0.9fr),
+    gutter: 0.8em,
+    [
+      #image("docs/images/backend_comparison.png", width: 100%)
+    ],
+    [
+      #text(size: 13pt)[
+        *Key findings*:
+        - llama.cpp excels with NF4 (46.4 tok/s) and default (41.3 tok/s)
+        - tinygrad performs best with INT8 (27.5 tok/s) and float16 (25.4 tok/s)
+        - Performance varies significantly by quantization method
+      ]
+    ]
+  )
 ]
 
 #slide[
@@ -716,39 +725,47 @@
 ]
 
 #slide[
-  #figure(
+  #align(left)[#text(size: 24pt, fill: mocha-mauve, weight: "bold")[Results: Performance Summary]]
+
+  #v(0.3em)
+
+  #grid(
+    columns: (1.1fr, 0.9fr),
+    gutter: 0.8em,
     [
-      #text(size: 24pt, fill: mocha-mauve, weight: "bold")[Results: Performance Summary]
-
-      #v(0.5em)
-
-      #image("docs/images/summary_stats.png", width: 85%)
-
-      #v(0.3em)
-
-      #text(size: 15pt)[
-      *Backend comparison*:
-      - llama.cpp: Average 31.0 tok/s, peak 46.4 tok/s (NF4)
-      - tinygrad: Average 18.1 tok/s, peak 27.5 tok/s (INT8)
-      - Overall llama.cpp shows ~1.7x better average performance
+      #image("docs/images/summary_stats.png", width: 100%)
+    ],
+    [
+      #text(size: 13pt)[
+        *Backend comparison*:
+        - llama.cpp: Average 31.0 tok/s, peak 46.4 tok/s (NF4)
+        - tinygrad: Average 18.1 tok/s, peak 27.5 tok/s (INT8)
+        - Overall llama.cpp shows ~1.7x better average performance
       ]
     ]
   )
 ]
 
 #slide[
-  #text(size: 24pt, fill: mocha-mauve, weight: "bold")[Results: Quantization Impact]
+  #align(left)[#text(size: 24pt, fill: mocha-mauve, weight: "bold")[Results: Quantization Impact]]
 
-  #align(center)[
-    #image("docs/images/quantization_impact.png", width: 75%)
-  ]
+  #v(0.3em)
 
-  #text(size: 14pt)[
-  *Trends*:
-  - Different backends favor different quantization strategies
-  - llama.cpp benefits most from aggressive quantization (NF4)
-  - tinygrad shows more consistent performance across methods
-  ]
+  #grid(
+    columns: (1.1fr, 0.9fr),
+    gutter: 0.8em,
+    [
+      #image("docs/images/quantization_impact.png", width: 100%)
+    ],
+    [
+      #text(size: 13pt)[
+        *Trends*:
+        - Different backends favor different quantization strategies
+        - llama.cpp benefits most from aggressive quantization (NF4)
+        - tinygrad shows more consistent performance across methods
+      ]
+    ]
+  )
 ]
 
 #slide[
@@ -786,16 +803,25 @@
 ]
 
 #slide[
-  = Results: Multi-Device Comparison
+  #align(left)[#text(size: 24pt, fill: mocha-mauve, weight: "bold")[Results: Multi-Device Comparison]]
 
-  #align(center)[
-    #image("docs/images/device_comparison.png", width: 90%)
-  ]
+  #v(0.3em)
 
-  *Cross-device insights*:
-  - MacBook (softmacs) shows stronger performance overall
-  - Android device (localhost) exhibits different characteristics
-  - Backend choice impacts relative performance across hardware
+  #grid(
+    columns: (1.1fr, 0.9fr),
+    gutter: 0.8em,
+    [
+      #image("docs/images/device_comparison.png", width: 100%)
+    ],
+    [
+      #text(size: 13pt)[
+        *Cross-device insights*:
+        - MacBook (softmacs) shows stronger performance overall
+        - Android device (localhost) exhibits different characteristics
+        - Backend choice impacts relative performance across hardware
+      ]
+    ]
+  )
 ]
 
 #slide[
