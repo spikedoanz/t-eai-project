@@ -161,8 +161,12 @@ phase4_model() {
     cd "$PROJECT_DIR"
     source "$VENV_DIR/bin/activate"
 
-    export LD_LIBRARY_PATH=/system/vendor/lib64:${LD_LIBRARY_PATH:-}
-    export GPU=1 OPENCL=1
+    # OpenCL environment for Adreno GPU
+    export LD_LIBRARY_PATH=/vendor/lib64:/system/vendor/lib64:${LD_LIBRARY_PATH:-}
+    export GPU=1
+    export OPENCL=1
+    export PYOPENCL_CTX=0
+    export PYOPENCL_PLATFORM=0
     export PYTHONPATH="$PROJECT_DIR/deps/tinygrad"
 
     python3 -c '
@@ -184,8 +188,12 @@ phase5_benchmark() {
     cd "$PROJECT_DIR"
     source "$VENV_DIR/bin/activate"
 
-    export LD_LIBRARY_PATH=/system/vendor/lib64:${LD_LIBRARY_PATH:-}
-    export GPU=1 OPENCL=1
+    # OpenCL environment for Adreno GPU
+    export LD_LIBRARY_PATH=/vendor/lib64:/system/vendor/lib64:${LD_LIBRARY_PATH:-}
+    export GPU=1
+    export OPENCL=1
+    export PYOPENCL_CTX=0
+    export PYOPENCL_PLATFORM=0
     export PYTHONPATH="$PROJECT_DIR/deps/tinygrad"
 
     python3 tinygrad_benchmark.py
