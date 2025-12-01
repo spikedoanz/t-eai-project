@@ -1,0 +1,146 @@
+[
+  {
+    "quantization": "default",
+    "size": "1B",
+    "environment": "wordle",
+    "num_examples": 100,
+    "max_tokens": 512,
+    "metrics": {
+      "reward": {
+        "avg": 0.141,
+        "std": 0.006
+      },
+      "check_answer_reward_func": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "partial_credit_reward_func": {
+        "avg": 0.1,
+        "std": 0.0
+      },
+      "count_turns_reward_func": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "format_reward_func": {
+        "avg": 0.207,
+        "std": 0.029
+      },
+      "eval_time_seconds": 16.43
+    },
+    "elapsed_seconds": 44.26808190345764,
+    "returncode": 0,
+    "timestamp": "2025-11-30T21:39:03.681937",
+    "backend": "llamacpp",
+    "stdout": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n--- All ---\nRewards:\nreward: avg - 0.141, std - 0.006\nr1: [0.14, 0.14, 0.167, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14]\ncheck_answer_reward_func: avg - 0.000, std - 0.000\nr1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]\npartial_credit_reward_func: avg - 0.100, std - 0.000\nr1: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]\ncount_turns_reward_func: avg - 0.000, std - 0.000\nr1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]\nformat_reward_func: avg - 0.207, std - 0.029\nr1: [0.2, 0.2, 0.333, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2]\n",
+    "stderr": ":  60%|\u2588\u2588\u2588\u2588\u2588\u2588    | 12/20 [00:09<00:04,  1.97it/s]\nProcessing 20 groups (20 total rollouts):  65%|\u2588\u2588\u2588\u2588\u2588\u2588\u258c   | 13/20 [00:10<00:05,  1.27it/s]\nProcessing 20 groups (20 total rollouts):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 15/20 [00:11<00:03,  1.57it/s]\nProcessing 20 groups (20 total rollouts):  80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588  | 16/20 [00:11<00:02,  1.69it/s]\nProcessing 20 groups (20 total rollouts):  90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 18/20 [00:13<00:01,  1.29it/s]\nProcessing 20 groups (20 total rollouts):  95%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 19/20 [00:15<00:00,  1.11it/s]\nProcessing 20 groups (20 total rollouts): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 20/20 [00:16<00:00,  1.05it/s]\nProcessing 20 groups (20 total rollouts): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 20/20 [00:16<00:00,  1.22it/s]\n2025-11-30 21:39:03 - verifiers.utils.eval_utils - INFO - Results saved to outputs/evals/wordle--local/ad62b3a2\n2025-11-30 21:39:03 - verifiers.utils.eval_utils - INFO - Evaluation completed in 16.43 seconds\n2025-11-30 21:39:03 - verifiers.utils.eval_utils - INFO - Results saved to outputs/evals/wordle--local/ad62b3a2\n"
+  },
+  {
+    "quantization": "int8",
+    "size": "1B",
+    "environment": "wordle",
+    "num_examples": 100,
+    "max_tokens": 512,
+    "metrics": {
+      "reward": {
+        "avg": 0.14,
+        "std": 0.0
+      },
+      "check_answer_reward_func": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "partial_credit_reward_func": {
+        "avg": 0.1,
+        "std": 0.0
+      },
+      "count_turns_reward_func": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "format_reward_func": {
+        "avg": 0.2,
+        "std": 0.0
+      },
+      "eval_time_seconds": 8.76
+    },
+    "elapsed_seconds": 12.787779092788696,
+    "returncode": 0,
+    "timestamp": "2025-11-30T21:39:29.490899",
+    "backend": "llamacpp",
+    "stdout": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n--- All ---\nRewards:\nreward: avg - 0.140, std - 0.000\nr1: [0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14]\ncheck_answer_reward_func: avg - 0.000, std - 0.000\nr1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]\npartial_credit_reward_func: avg - 0.100, std - 0.000\nr1: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]\ncount_turns_reward_func: avg - 0.000, std - 0.000\nr1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]\nformat_reward_func: avg - 0.200, std - 0.000\nr1: [0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2]\n",
+    "stderr": "):  50%|\u2588\u2588\u2588\u2588\u2588     | 10/20 [00:05<00:05,  1.79it/s]\nProcessing 20 groups (20 total rollouts):  55%|\u2588\u2588\u2588\u2588\u2588\u258c    | 11/20 [00:05<00:03,  2.30it/s]\nProcessing 20 groups (20 total rollouts):  70%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588   | 14/20 [00:06<00:02,  2.54it/s]\nProcessing 20 groups (20 total rollouts):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 15/20 [00:07<00:02,  2.27it/s]\nProcessing 20 groups (20 total rollouts):  80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588  | 16/20 [00:07<00:01,  2.38it/s]\nProcessing 20 groups (20 total rollouts):  90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 18/20 [00:08<00:00,  2.64it/s]\nProcessing 20 groups (20 total rollouts):  95%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 19/20 [00:08<00:00,  2.48it/s]\nProcessing 20 groups (20 total rollouts): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 20/20 [00:08<00:00,  2.29it/s]\n2025-11-30 21:39:28 - verifiers.utils.eval_utils - INFO - Results saved to outputs/evals/wordle--local/8c86d8fc\n2025-11-30 21:39:28 - verifiers.utils.eval_utils - INFO - Evaluation completed in 8.76 seconds\n2025-11-30 21:39:28 - verifiers.utils.eval_utils - INFO - Results saved to outputs/evals/wordle--local/8c86d8fc\n"
+  },
+  {
+    "quantization": "nf4",
+    "size": "1B",
+    "environment": "wordle",
+    "num_examples": 100,
+    "max_tokens": 512,
+    "metrics": {
+      "reward": {
+        "avg": 0.14,
+        "std": 0.0
+      },
+      "check_answer_reward_func": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "partial_credit_reward_func": {
+        "avg": 0.1,
+        "std": 0.0
+      },
+      "count_turns_reward_func": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "format_reward_func": {
+        "avg": 0.2,
+        "std": 0.0
+      },
+      "eval_time_seconds": 11.2
+    },
+    "elapsed_seconds": 15.23568081855774,
+    "returncode": 0,
+    "timestamp": "2025-11-30T21:39:57.745878",
+    "backend": "llamacpp",
+    "stdout": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n--- All ---\nRewards:\nreward: avg - 0.140, std - 0.000\nr1: [0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14]\ncheck_answer_reward_func: avg - 0.000, std - 0.000\nr1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]\npartial_credit_reward_func: avg - 0.100, std - 0.000\nr1: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]\ncount_turns_reward_func: avg - 0.000, std - 0.000\nr1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]\nformat_reward_func: avg - 0.200, std - 0.000\nr1: [0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2]\n",
+    "stderr": ":  70%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588   | 14/20 [00:07<00:03,  1.99it/s]\nProcessing 20 groups (20 total rollouts):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 15/20 [00:08<00:02,  2.07it/s]\nProcessing 20 groups (20 total rollouts):  80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588  | 16/20 [00:08<00:01,  2.10it/s]\nProcessing 20 groups (20 total rollouts):  85%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c | 17/20 [00:09<00:02,  1.32it/s]\nProcessing 20 groups (20 total rollouts):  90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 18/20 [00:10<00:01,  1.58it/s]\nProcessing 20 groups (20 total rollouts):  95%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 19/20 [00:10<00:00,  2.06it/s]\nProcessing 20 groups (20 total rollouts): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 20/20 [00:11<00:00,  1.81it/s]\nProcessing 20 groups (20 total rollouts): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 20/20 [00:11<00:00,  1.79it/s]\n2025-11-30 21:39:57 - verifiers.utils.eval_utils - INFO - Results saved to outputs/evals/wordle--local/6e20e504\n2025-11-30 21:39:57 - verifiers.utils.eval_utils - INFO - Evaluation completed in 11.20 seconds\n2025-11-30 21:39:57 - verifiers.utils.eval_utils - INFO - Results saved to outputs/evals/wordle--local/6e20e504\n"
+  },
+  {
+    "quantization": "float16",
+    "size": "1B",
+    "environment": "wordle",
+    "num_examples": 100,
+    "max_tokens": 512,
+    "metrics": {
+      "reward": {
+        "avg": 0.14,
+        "std": 0.0
+      },
+      "check_answer_reward_func": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "partial_credit_reward_func": {
+        "avg": 0.1,
+        "std": 0.0
+      },
+      "count_turns_reward_func": {
+        "avg": 0.0,
+        "std": 0.0
+      },
+      "format_reward_func": {
+        "avg": 0.2,
+        "std": 0.0
+      },
+      "eval_time_seconds": 12.87
+    },
+    "elapsed_seconds": 16.93053889274597,
+    "returncode": 0,
+    "timestamp": "2025-11-30T21:40:27.694807",
+    "backend": "llamacpp",
+    "stdout": "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2502\n\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n--- All ---\nRewards:\nreward: avg - 0.140, std - 0.000\nr1: [0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.14]\ncheck_answer_reward_func: avg - 0.000, std - 0.000\nr1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]\npartial_credit_reward_func: avg - 0.100, std - 0.000\nr1: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]\ncount_turns_reward_func: avg - 0.000, std - 0.000\nr1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]\nformat_reward_func: avg - 0.200, std - 0.000\nr1: [0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2]\n",
+    "stderr": ":  65%|\u2588\u2588\u2588\u2588\u2588\u2588\u258c   | 13/20 [00:07<00:03,  1.91it/s]\nProcessing 20 groups (20 total rollouts):  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 15/20 [00:08<00:02,  2.16it/s]\nProcessing 20 groups (20 total rollouts):  80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588  | 16/20 [00:08<00:02,  1.95it/s]\nProcessing 20 groups (20 total rollouts):  85%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c | 17/20 [00:09<00:01,  2.28it/s]\nProcessing 20 groups (20 total rollouts):  90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 18/20 [00:10<00:01,  1.74it/s]\nProcessing 20 groups (20 total rollouts):  95%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 19/20 [00:10<00:00,  1.65it/s]\nProcessing 20 groups (20 total rollouts): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 20/20 [00:12<00:00,  1.02s/it]\nProcessing 20 groups (20 total rollouts): 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 20/20 [00:12<00:00,  1.56it/s]\n2025-11-30 21:40:27 - verifiers.utils.eval_utils - INFO - Results saved to outputs/evals/wordle--local/1edf9c21\n2025-11-30 21:40:27 - verifiers.utils.eval_utils - INFO - Evaluation completed in 12.87 seconds\n2025-11-30 21:40:27 - verifiers.utils.eval_utils - INFO - Results saved to outputs/evals/wordle--local/1edf9c21\n"
+  }
+]
