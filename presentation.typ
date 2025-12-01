@@ -564,9 +564,9 @@
 
   #text(size: 15pt)[
   *Key Findings*:
-  - #text(fill: mocha-green)[INT8 achieves best GSM8k accuracy] (7.0%) with fastest eval time (423s)
-  - #text(fill: mocha-peach)[NF4 leads on Reverse Text] (11.9% LCS) despite 4-bit quantization
-  - Quantization has #text(fill: mocha-yellow)[minimal impact on task performance]
+  - #text(fill: mocha-green)[Quantization does not degrade performance] - INT8/NF4 match or exceed baseline
+  - #text(fill: mocha-blue)[INT8 provides best speed/accuracy trade-off] with fastest eval times
+  - #text(fill: mocha-yellow)[Minimal variance across quantizations] (within measurement error)
   - #text(fill: mocha-pink)[All quantizations maintain 100% format compliance] on both tasks
   ]
 ]
