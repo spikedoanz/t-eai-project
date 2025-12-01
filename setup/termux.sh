@@ -90,9 +90,11 @@ phase1_packages() {
     fi
 
     info "Installing Termux packages..."
+    # Set non-interactive mode to avoid dpkg config prompts when piped from curl
+    export DEBIAN_FRONTEND=noninteractive
     pkg update -y
-    pkg upgrade -y || true
-    pkg install -y python python-pip git wget curl openssh golang
+    pkg upgrade -y -o Dpkg::Options::="--force-confold" || true
+    pkg install -y python python-pip git wget curl golang
     pkg install -y opencl-headers opencl-vendor-driver || true
 
     create_marker "$MARKER"
