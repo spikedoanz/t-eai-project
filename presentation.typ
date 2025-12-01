@@ -719,29 +719,45 @@
 ]
 
 #slide[
-  = Results: Performance Summary
+  #figure(
+    [
+      #text(size: 24pt, fill: mocha-mauve, weight: "bold")[Results: Performance Summary]
 
-  #align(center)[
-    #image("docs/images/summary_stats.png", width: 90%)
-  ]
+      #v(0.5em)
 
-  *Backend comparison*:
-  - llama.cpp: Average 31.0 tok/s, peak 46.4 tok/s (NF4)
-  - tinygrad: Average 18.1 tok/s, peak 27.5 tok/s (INT8)
-  - Overall llama.cpp shows ~1.7x better average performance
+      #image("docs/images/summary_stats.png", width: 85%)
+
+      #v(0.3em)
+
+      #text(size: 15pt)[
+      *Backend comparison*:
+      - llama.cpp: Average 31.0 tok/s, peak 46.4 tok/s (NF4)
+      - tinygrad: Average 18.1 tok/s, peak 27.5 tok/s (INT8)
+      - Overall llama.cpp shows ~1.7x better average performance
+      ]
+    ]
+  )
 ]
 
 #slide[
-  = Results: Quantization Impact
+  #figure(
+    [
+      #text(size: 24pt, fill: mocha-mauve, weight: "bold")[Results: Quantization Impact]
 
-  #align(center)[
-    #image("docs/images/quantization_impact.png", width: 90%)
-  ]
+      #v(0.5em)
 
-  *Trends*:
-  - Different backends favor different quantization strategies
-  - llama.cpp benefits most from aggressive quantization (NF4)
-  - tinygrad shows more consistent performance across methods
+      #image("docs/images/quantization_impact.png", width: 85%)
+
+      #v(0.3em)
+
+      #text(size: 15pt)[
+      *Trends*:
+      - Different backends favor different quantization strategies
+      - llama.cpp benefits most from aggressive quantization (NF4)
+      - tinygrad shows more consistent performance across methods
+      ]
+    ]
+  )
 ]
 
 #slide[
