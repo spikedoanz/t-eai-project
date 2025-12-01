@@ -99,38 +99,49 @@ benchmark_output/
 Evaluate model accuracy on downstream tasks using the verifiers framework:
 
 ```bash
-python3 llamacpp_sweep.py --env gsm8k --num-examples 20 --size 1B
+python3 llamacpp_sweep.py --env wordle --num-examples 20 --size 1B
 ```
 
 **Parameters**:
-- `--env gsm8k`: Task environment (grade school math problems)
+- `--env wordle`: Task environment (word-guessing game)
 - `--num-examples 20`: Number of test examples per quantization
 - `--size 1B`: Model size (1B, 8B, 70B, or 405B)
 
-**Expected time**: 40-80 minutes (depends on number of examples)
+**Expected time**: 20-40 minutes (depends on number of examples)
+
+**Note**: The wordle environment is automatically installed during setup. For other environments, install them first:
+```bash
+# Install other environments as needed
+python3 -m verifiers.scripts.install gsm8k --from-repo
+python3 -m verifiers.scripts.install math --from-repo
+```
 
 **Output files**:
 ```
 verifiers_results/
-└── llamacpp_sweep_gsm8k_1B_20251130_123456.json
+└── llamacpp_sweep_wordle_1B_20251130_123456.json
 ```
 
 #### Other Available Environments
 
-The verifiers framework supports multiple evaluation tasks:
+The verifiers framework supports multiple evaluation tasks. First install the environment, then run the sweep:
 
 ```bash
-# Math problems (more challenging)
+# Grade school math (requires installation)
+python3 -m verifiers.scripts.install gsm8k --from-repo
+python3 llamacpp_sweep.py --env gsm8k --num-examples 10
+
+# Math problems (more challenging, requires installation)
+python3 -m verifiers.scripts.install math --from-repo
 python3 llamacpp_sweep.py --env math --num-examples 10
 
-# Graduate-level science questions
+# Graduate-level science questions (requires installation)
+python3 -m verifiers.scripts.install gpqa --from-repo
 python3 llamacpp_sweep.py --env gpqa --num-examples 10
 
-# Fact-checking
+# Fact-checking (requires installation)
+python3 -m verifiers.scripts.install simpleqa --from-repo
 python3 llamacpp_sweep.py --env simpleqa --num-examples 20
-
-# Word game
-python3 llamacpp_sweep.py --env wordle --num-examples 10
 ```
 
 ### Step 3: Collate Results
@@ -311,10 +322,10 @@ Based on Pixel 7 performance:
 | Task | Examples | Expected Time |
 |------|----------|---------------|
 | Performance benchmark | All quantizations | 5-10 min |
-| GSM8K accuracy | 5 examples | 10-20 min |
-| GSM8K accuracy | 20 examples | 40-80 min |
-| GSM8K accuracy | 100 examples | 3-7 hours |
-| Full benchmark suite | Default config | 45-90 min |
+| Wordle accuracy | 5 examples | 5-10 min |
+| Wordle accuracy | 20 examples | 20-40 min |
+| Wordle accuracy | 100 examples | 2-3 hours |
+| Full benchmark suite | Default config (20 examples) | 30-50 min |
 
 ---
 

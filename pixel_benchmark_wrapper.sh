@@ -157,12 +157,12 @@ fi
 # ============================================================================
 
 if [ "$RUN_ACCURACY" = true ]; then
-    info "[2/4] Running accuracy evaluation (GSM8K, $NUM_EXAMPLES examples)..."
-    echo "This evaluates model accuracy on math problems"
-    echo "Expected time: $(($NUM_EXAMPLES * 2))-$(($NUM_EXAMPLES * 4)) minutes"
+    info "[2/4] Running accuracy evaluation (wordle, $NUM_EXAMPLES examples)..."
+    echo "This evaluates model accuracy on word-guessing tasks"
+    echo "Expected time: $(($NUM_EXAMPLES * 1))-$(($NUM_EXAMPLES * 2)) minutes"
     echo ""
 
-    if python3 llamacpp_sweep.py --env gsm8k --num-examples $NUM_EXAMPLES --size 1B; then
+    if python3 llamacpp_sweep.py --env wordle --num-examples $NUM_EXAMPLES --size 1B; then
         success "Accuracy evaluation completed"
     else
         warn "Accuracy evaluation failed (continuing with result packaging)"

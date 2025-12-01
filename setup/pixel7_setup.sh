@@ -483,6 +483,16 @@ phase7_python() {
     python3 -c "import bottle; import tiktoken; from tinygrad.helpers import fetch" \
         || error "Python import verification failed"
 
+    # Install verifiers environment for wordle
+    info "Installing verifiers wordle environment..."
+    cd "$PROJECT_DIR/deps/verifiers"
+    if python3 -m verifiers.scripts.install wordle --from-repo; then
+        success "Wordle environment installed"
+    else
+        warn "Failed to install wordle environment (you can install it later with: python3 -m verifiers.scripts.install wordle --from-repo)"
+    fi
+    cd "$PROJECT_DIR"
+
     create_marker "$MARKER"
     success "Phase 7 complete: Python environment ready"
 }
