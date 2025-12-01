@@ -537,6 +537,65 @@
 ]
 
 #slide[
+  = Benchmark Tasks Explained
+
+  #text(size: 16pt)[
+  #grid(
+    columns: (1fr, 1fr),
+    gutter: 1.5em,
+    [
+      == #text(fill: mocha-blue)[GSM8k] - Grade School Math
+
+      Tests mathematical reasoning on word problems
+
+      #v(0.3em)
+
+      *Example Input:*
+      ```
+      "A restaurant serves 20 customers
+      per hour. If it's open 8 hours,
+      how many customers total?"
+      ```
+
+      #v(0.3em)
+
+      *Expected Output:*
+      ```
+      160
+      ```
+
+      #v(0.3em)
+
+      *Metric*: Exact answer match (correct/incorrect)
+    ],
+    [
+      == #text(fill: mocha-pink)[Reverse Text] - String Manipulation
+
+      Tests ability to reverse input strings character-by-character
+
+      #v(0.3em)
+
+      *Example Input:*
+      ```
+      "hello world"
+      ```
+
+      #v(0.3em)
+
+      *Expected Output:*
+      ```
+      "dlrow olleh"
+      ```
+
+      #v(0.3em)
+
+      *Metric*: LCS (Longest Common Subsequence) similarity score
+    ]
+  )
+  ]
+]
+
+#slide[
   = Results: Downstream Task Accuracy
 
   #text(fill: mocha-yellow)[*Qwen2.5-Math-1.5B-Instruct*] evaluated on #text(fill: mocha-blue)[GSM8k] and #text(fill: mocha-pink)[Reverse Text] (llama.cpp backend)
