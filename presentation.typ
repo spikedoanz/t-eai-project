@@ -437,18 +437,17 @@
 #slide[
   = Implementation: Pixel Device Setup
 
-  #text(size: 14pt)[
+  #text(size: 12pt)[
   #grid(
     columns: (1fr, 1fr),
-    gutter: 1em,
+    gutter: 0.8em,
     [
       == Bootstrap (Termux)
       ```bash
       # Install from F-Droid
       pkg update && pkg upgrade
       pkg install python git openssh
-      pkg install cmake clang ninja
-      pkg install golang
+      pkg install cmake clang ninja golang
 
       # Install uv & croc
       curl -LsSf astral.sh/uv/install.sh | sh
@@ -460,20 +459,22 @@
       # On Pixel
       sshd
       passwd
-      id  # Get username (u0_a190)
+      id  # Get username
 
       # From host
-      ssh u0_a190@<tailscale-ip> -p 8022
+      ssh u0_a190@<ip> -p 8022
       ```
     ],
     [
       == OpenCL GPU Setup
       ```bash
       # Install OpenCL for Adreno GPU
-      pkg install opencl-headers opencl-vendor-driver
+      pkg install opencl-headers \
+        opencl-vendor-driver
 
       # Set environment
-      export LD_LIBRARY_PATH=/system/vendor/lib64:$LD_LIBRARY_PATH
+      export LD_LIBRARY_PATH=\
+        /system/vendor/lib64:$LD_LIBRARY_PATH
       export GPU=1
       export OPENCL=1
       ```
@@ -489,9 +490,7 @@
       ```
     ]
   )
-
-  #v(0.3em)
-  #text(size: 11pt)[
+  #text(size: 10pt)[
     Full setup guide: `docs/WORKFLOW.md` & `setup/PIXEL-SSH.md`
   ]
   ]
