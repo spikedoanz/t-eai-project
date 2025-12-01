@@ -359,6 +359,66 @@
 ]
 
 #slide[
+  = Implementation: Pixel Device Setup
+
+  #text(size: 14pt)[
+  #grid(
+    columns: (1fr, 1fr),
+    gutter: 1em,
+    [
+      == Bootstrap (Termux)
+      ```bash
+      # Install from F-Droid
+      pkg update && pkg upgrade
+      pkg install python git openssh
+      pkg install cmake clang ninja
+      pkg install golang
+
+      # Install uv & croc
+      curl -LsSf astral.sh/uv/install.sh | sh
+      go install github.com/schollz/croc/v10@latest
+      ```
+
+      == SSH Access (Tailscale)
+      ```bash
+      # On Pixel
+      sshd
+      passwd
+      id  # Get username (u0_a190)
+
+      # From host
+      ssh u0_a190@<tailscale-ip> -p 8022
+      ```
+    ],
+    [
+      == OpenCL GPU Setup
+      ```bash
+      # Install OpenCL for Adreno GPU
+      pkg install opencl-headers opencl-vendor-driver
+
+      # Set environment
+      export LD_LIBRARY_PATH=/system/vendor/lib64:$LD_LIBRARY_PATH
+      export GPU=1
+      export OPENCL=1
+      ```
+
+      == Build & Transfer
+      ```bash
+      # Build llama.cpp with OpenCL
+      cmake .. -DGGML_OPENCL=ON
+      cmake --build . -j$(nproc)
+
+      # Transfer models with croc
+      croc send model.gguf
+      ```
+    ]
+  )
+  ]
+
+  Full setup guide: `docs/WORKFLOW.md` & `setup/PIXEL-SSH.md`
+]
+
+#slide[
   = LLM Evaluation: Verifiers Framework
 
   Beyond raw throughput, we measure *downstream task accuracy*:
