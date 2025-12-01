@@ -537,35 +537,37 @@
 ]
 
 #slide[
-  = Results: GSM8k Accuracy vs Quantization
+  = Results: Downstream Task Accuracy
 
-  #text(fill: mocha-yellow)[*Qwen2.5-Math-1.5B-Instruct*] on #text(fill: mocha-blue)[GSM8k] (512 examples, llama.cpp backend)
+  #text(fill: mocha-yellow)[*Qwen2.5-Math-1.5B-Instruct*] evaluated on #text(fill: mocha-blue)[GSM8k] and #text(fill: mocha-pink)[Reverse Text] (llama.cpp backend)
 
-  #v(0.5em)
+  #v(0.3em)
 
   #align(center)[
+    #text(size: 14pt)[
     #table(
-      columns: (1fr, 1fr, 1fr, 1fr),
-      inset: 10pt,
+      columns: (1fr, 1fr, 1fr, 1fr, 1fr),
+      inset: 8pt,
       align: center,
       table.header(
-        [*Quantization*], [*Accuracy*], [*Eval Time*], [*Speedup*]
+        [*Quantization*], [*GSM8k Acc*], [*GSM8k Time*], [*RevText LCS*], [*RevText Time*]
       ),
-      [#text(fill: mocha-green)[INT8]], [#text(fill: mocha-green)[7.0%]], [423s], [1.17x],
-      [#text(fill: mocha-peach)[NF4]], [#text(fill: mocha-yellow)[6.8%]], [476s], [1.04x],
-      [#text(fill: mocha-blue)[FP16]], [#text(fill: mocha-red)[6.2%]], [445s], [1.11x],
-      [#text(fill: mocha-mauve)[Default]], [#text(fill: mocha-red)[4.7%]], [495s], [1.00x],
+      [#text(fill: mocha-green)[INT8]], [#text(fill: mocha-green)[7.0%]], [423s], [#text(fill: mocha-green)[10.6%]], [158s],
+      [#text(fill: mocha-peach)[NF4]], [#text(fill: mocha-yellow)[6.8%]], [476s], [#text(fill: mocha-green)[11.9%]], [183s],
+      [#text(fill: mocha-blue)[FP16]], [#text(fill: mocha-red)[6.2%]], [445s], [#text(fill: mocha-yellow)[10.2%]], [264s],
+      [#text(fill: mocha-mauve)[Default]], [#text(fill: mocha-red)[4.7%]], [495s], [#text(fill: mocha-yellow)[10.5%]], [189s],
     )
+    ]
   ]
 
-  #v(0.5em)
+  #v(0.3em)
 
-  #text(size: 16pt)[
+  #text(size: 15pt)[
   *Key Findings*:
-  - #text(fill: mocha-green)[INT8 achieves highest accuracy] (7.0%) with fastest eval time
-  - #text(fill: mocha-peach)[NF4 maintains competitive accuracy] (6.8%) with 4-bit quantization
-  - Quantization has #text(fill: mocha-yellow)[minimal impact on accuracy] for this 1.5B model
-  - All quantizations show #text(fill: mocha-pink)[100% format compliance]
+  - #text(fill: mocha-green)[INT8 achieves best GSM8k accuracy] (7.0%) with fastest eval time (423s)
+  - #text(fill: mocha-peach)[NF4 leads on Reverse Text] (11.9% LCS) despite 4-bit quantization
+  - Quantization has #text(fill: mocha-yellow)[minimal impact on task performance]
+  - #text(fill: mocha-pink)[All quantizations maintain 100% format compliance] on both tasks
   ]
 ]
 
